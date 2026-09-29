@@ -13,9 +13,12 @@ export function errors(err, req, res, _next) {
       },
     });
   }
-  const message = err.message || "Unexpected error";
-  const status = err.status || 400;
-  res
-    .status(status)
-    .json({ error: { code: err.code || "VALIDATION_ERROR", message } });
+  if (err.status && err.status < 500)
+    return res.status(err.status).json({
+      error: { code: err.code || "VALIDATION_ERROR", message: err.message },
+    });
+  console.error(err);
+  res.status(500).json({
+    error: { code: "INTERNAL_ERROR", message: "Something went wrong" },
+  });
 }
