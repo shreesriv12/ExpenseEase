@@ -5,6 +5,7 @@ import { prisma } from "../../src/config/prisma.js";
 import {
   bearer,
   clearGroupData,
+  createExpense,
   createGroup,
   registerUser,
   resetDatabase,
@@ -339,5 +340,203 @@ describe("GET /api/groups/:id/expenses", () => {
     );
 
     expect(response.status).toBe(401);
+  });
+});
+
+describe("PUT /api/expenses/:id", () => {
+  const updateBody = (overrides = {}) => ({
+    description: "Dinner updated",
+    amountPaise: 12000,
+    category: "Food",
+    date: "2026-09-02T00:00:00.000Z",
+    paidById: admin.user.id,
+    splitType: "EQUAL",
+    participants: [{ userId: admin.user.id }, { userId: member.user.id }],
+    ...overrides,
+  });
+
+  const putExpense = (id, body, token = admin.token) =>
+    request(app).put(`/api/expenses/${id}`).set(bearer(token)).send(body);
+
+  let expense;
+
+  beforeEach(async () => {
+    expense = await createExpense({
+      groupId: group.id,
+      paidById: admin.user.id,
+      createdById: admin.user.id,
+      amountPaise: 10000,
+      splits: [
+        { userId: admin.user.id, sharePaise: 5000 },
+        { userId: member.user.id, sharePaise: 5000 },
+      ],
+    });
+  });
+
+  it("lets the creator update their own expense and replaces the splits", async () => {
+    const response = await putExpense(expense.id, updateBody());
+
+    expect(response.status).toBe(200);
+    const stored = await prisma.expense.findUnique({
+      where: { id: expense.id },
+      include: { splits: true },
+    });
+    expect(stored.description).toBe("Dinner updated");
+    expect(stored.amountPaise).toBe(12000);
+    expect(stored.splits.reduce((n, s) => n + s.sharePaise, 0)).toBe(12000);
+    expect(stored.splits).toHaveLength(2);
+  });
+
+  it("lets a group admin update another member's expense", async () => {
+    const other = await createExpense({
+      groupId: group.id,
+      paidById: member.user.id,
+      createdById: member.user.id,
+      amountPaise: 10000,
+      splits: [{ userId: member.user.id, sharePaise: 10000 }],
+    });
+
+    const response = await putExpense(other.id, updateBody());
+
+    expect(response.status).toBe(200);
+  });
+
+  it("refuses a plain member editing another member's expense", async () => {
+    const response = await putExpense(expense.id, updateBody(), member.token);
+
+    expect(response.status).toBe(403);
+    expect(response.body.error.code).toBe("FORBIDDEN");
+    const stored = await prisma.expense.findUnique({
+      where: { id: expense.id },
+    });
+    expect(stored.description).toBe("Test expense");
+  });
+
+  it("refuses a non-member", async () => {
+    const response = await putExpense(expense.id, updateBody(), outsider.token);
+
+    expect(response.status).toBe(403);
+  });
+
+  it("returns 404 for an expense that does not exist", async () => {
+    const response = await putExpense(9999, updateBody());
+
+    expect(response.status).toBe(404);
+  });
+
+  it("records an activity entry for the update", async () => {
+    await putExpense(expense.id, updateBody());
+
+    const activity = await prisma.activity.findFirst({
+      where: { groupId: group.id, type: "EXPENSE_UPDATED" },
+    });
+    expect(activity).toBeTruthy();
+    expect(activity.message).toContain("Dinner updated");
+  });
+
+  it("leaves the stored expense unchanged when the new split is invalid", async () => {
+    const response = await putExpense(
+      expense.id,
+      updateBody({
+        splitType: "EXACT",
+        participants: [
+          { userId: admin.user.id, sharePaise: 100 },
+          { userId: member.user.id, sharePaise: 100 },
+        ],
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    const stored = await prisma.expense.findUnique({
+      where: { id: expense.id },
+      include: { splits: true },
+    });
+    expect(stored.amountPaise).toBe(10000);
+    expect(stored.splits).toHaveLength(2);
+  });
+
+  it("requires authentication", async () => {
+    const response = await request(app)
+      .put(`/api/expenses/${expense.id}`)
+      .send(updateBody());
+
+    expect(response.status).toBe(401);
+  });
+});
+
+describe("DELETE /api/expenses/:id", () => {
+  let expense;
+
+  beforeEach(async () => {
+    expense = await createExpense({
+      groupId: group.id,
+      paidById: admin.user.id,
+      createdById: admin.user.id,
+      amountPaise: 10000,
+      splits: [{ userId: admin.user.id, sharePaise: 10000 }],
+    });
+  });
+
+  const deleteExpense = (id, token) =>
+    request(app).delete(`/api/expenses/${id}`).set(bearer(token));
+
+  it("lets the creator delete their own expense", async () => {
+    const response = await deleteExpense(expense.id, admin.token);
+
+    expect(response.status).toBe(204);
+    await expect(prisma.expense.count()).resolves.toBe(0);
+    await expect(prisma.expenseSplit.count()).resolves.toBe(0);
+  });
+
+  it("lets a group admin delete another member's expense", async () => {
+    const other = await createExpense({
+      groupId: group.id,
+      paidById: member.user.id,
+      createdById: member.user.id,
+      amountPaise: 10000,
+      splits: [{ userId: member.user.id, sharePaise: 10000 }],
+    });
+
+    const response = await deleteExpense(other.id, admin.token);
+
+    expect(response.status).toBe(204);
+  });
+
+  it("refuses a plain member deleting another member's expense", async () => {
+    const response = await deleteExpense(expense.id, member.token);
+
+    expect(response.status).toBe(403);
+    expect(response.body.error.code).toBe("FORBIDDEN");
+    await expect(prisma.expense.count()).resolves.toBe(1);
+  });
+
+  it("refuses a non-member", async () => {
+    const response = await deleteExpense(expense.id, outsider.token);
+
+    expect(response.status).toBe(403);
+    await expect(prisma.expense.count()).resolves.toBe(1);
+  });
+
+  it("records an activity entry for the deletion", async () => {
+    await deleteExpense(expense.id, admin.token);
+
+    const activity = await prisma.activity.findFirst({
+      where: { groupId: group.id, type: "EXPENSE_DELETED" },
+    });
+    expect(activity).toBeTruthy();
+    expect(activity.message).toContain("Test expense");
+  });
+
+  it("returns 404 for an expense that does not exist", async () => {
+    const response = await deleteExpense(9999, admin.token);
+
+    expect(response.status).toBe(404);
+  });
+
+  it("requires authentication", async () => {
+    const response = await request(app).delete(`/api/expenses/${expense.id}`);
+
+    expect(response.status).toBe(401);
+    await expect(prisma.expense.count()).resolves.toBe(1);
   });
 });
