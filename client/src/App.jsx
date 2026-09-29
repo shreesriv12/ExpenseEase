@@ -357,7 +357,7 @@ function AddExpense({ group, onDone }) {
   return (
     <section>
       <h3>Add expense</h3>
-      <form onSubmit={submit} className="inline">
+      <form onSubmit={submit} className="inline" aria-label="Add expense">
         <label>
           Description
           <input name="description" required />
@@ -497,8 +497,13 @@ function EditExpense({ group, expense, onDone, onCancel }) {
   );
 }
 
-function RecordSettlement({ group, onDone }) {
+function RecordSettlement({ group, balances, onDone }) {
   const [error, setError] = useState("");
+  const first = group.members[0]?.user.id;
+  const second = group.members[1]?.user.id;
+  const suggestion = balances?.simplifiedSettlements?.[0];
+  const defaultFrom = suggestion?.from ?? first;
+  const defaultTo = suggestion?.to ?? (second ?? first);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -533,7 +538,7 @@ function RecordSettlement({ group, onDone }) {
       <form className="inline" onSubmit={submit}>
         <label>
           From
-          <select name="fromUserId">
+          <select name="fromUserId" defaultValue={defaultFrom}>
             {group.members.map((member) => (
               <option key={member.user.id} value={member.user.id}>
                 {member.user.name}
@@ -543,7 +548,7 @@ function RecordSettlement({ group, onDone }) {
         </label>
         <label>
           To
-          <select name="toUserId">
+          <select name="toUserId" defaultValue={defaultTo}>
             {group.members.map((member) => (
               <option key={member.user.id} value={member.user.id}>
                 {member.user.name}
@@ -757,7 +762,11 @@ function GroupDetail({ group, currentUserId, onBack }) {
             </>
           )}
 
-          <RecordSettlement group={group} onDone={refresh} />
+          <RecordSettlement
+            group={group}
+            balances={balances}
+            onDone={refresh}
+          />
         </section>
       )}
 
