@@ -83,6 +83,46 @@ describe("POST /api/auth/register", () => {
     expect(response.status).toBe(400);
     await expect(prisma.user.count()).resolves.toBe(0);
   });
+
+  it("rejects a malformed email address", async () => {
+    const response = await request(app)
+      .post("/api/auth/register")
+      .send({ ...credentials, email: "not-an-email" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe("VALIDATION_ERROR");
+    await expect(prisma.user.count()).resolves.toBe(0);
+  });
+
+  it("rejects a missing email address", async () => {
+    const response = await request(app)
+      .post("/api/auth/register")
+      .send({ name: credentials.name, password: credentials.password });
+
+    expect(response.status).toBe(400);
+    await expect(prisma.user.count()).resolves.toBe(0);
+  });
+
+  it("trims surrounding whitespace from the name and email", async () => {
+    const response = await request(app)
+      .post("/api/auth/register")
+      .send({ ...credentials, name: "  Asha  ", email: "  asha@test.local  " });
+
+    expect(response.status).toBe(201);
+    expect(response.body.user).toMatchObject({
+      name: "Asha",
+      email: "asha@test.local",
+    });
+  });
+
+  it("describes which field failed validation", async () => {
+    const response = await request(app)
+      .post("/api/auth/register")
+      .send({ ...credentials, password: "short" });
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.message).toContain("password");
+  });
 });
 
 describe("POST /api/auth/login", () => {
