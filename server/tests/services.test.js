@@ -3,6 +3,7 @@ import {
   equalSplits,
   exactSplits,
   percentSplits,
+  calculateSplits,
 } from "../src/services/splits.js";
 import { simplifyDebts } from "../src/services/debtSimplifier.js";
 import { computeBalances } from "../src/services/balances.js";
@@ -65,6 +66,156 @@ describe("equal split rounding", () => {
   it("rejects an empty participant list", () =>
     expect(() => equalSplits(100, [])).toThrow());
 });
+describe("exact and percent split validation", () => {
+  const total = (splits) => splits.reduce((sum, s) => sum + s.sharePaise, 0);
+
+  it("accepts exact shares that total the amount", () =>
+    expect(
+      exactSplits(100, [
+        { userId: 1, sharePaise: 60 },
+        { userId: 2, sharePaise: 40 },
+      ]),
+    ).toEqual([
+      { userId: 1, sharePaise: 60 },
+      { userId: 2, sharePaise: 40 },
+    ]));
+
+  it("rejects exact shares that exceed the amount", () =>
+    expect(() =>
+      exactSplits(100, [
+        { userId: 1, sharePaise: 70 },
+        { userId: 2, sharePaise: 40 },
+      ]),
+    ).toThrow());
+
+  it("rejects a negative exact share", () =>
+    expect(() =>
+      exactSplits(100, [
+        { userId: 1, sharePaise: 120 },
+        { userId: 2, sharePaise: -20 },
+      ]),
+    ).toThrow());
+
+  it("rejects a non-integer exact share", () =>
+    expect(() => exactSplits(100, [{ userId: 1, sharePaise: 99.5 }])).toThrow());
+
+  it("rejects an empty exact participant list", () =>
+    expect(() => exactSplits(100, [])).toThrow());
+
+  it("does not mutate the caller exact split objects", () => {
+    const input = [{ userId: 1, sharePaise: 100 }];
+    exactSplits(100, input)[0].sharePaise = 0;
+    expect(input[0].sharePaise).toBe(100);
+  });
+
+  it("accepts percentages that total 100", () =>
+    expect(
+      percentSplits(1000, [
+        { userId: 1, percent: 60 },
+        { userId: 2, percent: 40 },
+      ]),
+    ).toEqual([
+      { userId: 1, percent: 60, sharePaise: 600 },
+      { userId: 2, percent: 40, sharePaise: 400 },
+    ]));
+
+  it("rejects percentages totalling more than 100", () =>
+    expect(() =>
+      percentSplits(100, [
+        { userId: 1, percent: 60 },
+        { userId: 2, percent: 41 },
+      ]),
+    ).toThrow());
+
+  it("rejects percentages totalling less than 100", () =>
+    expect(() =>
+      percentSplits(100, [
+        { userId: 1, percent: 60 },
+        { userId: 2, percent: 39 },
+      ]),
+    ).toThrow());
+
+  it("rejects a negative percentage", () =>
+    expect(() =>
+      percentSplits(100, [
+        { userId: 1, percent: 120 },
+        { userId: 2, percent: -20 },
+      ]),
+    ).toThrow());
+
+  it("rejects a non-integer percentage", () =>
+    expect(() =>
+      percentSplits(100, [
+        { userId: 1, percent: 33.33 },
+        { userId: 2, percent: 66.67 },
+      ]),
+    ).toThrow());
+
+  it("rejects an empty percent participant list", () =>
+    expect(() => percentSplits(100, [])).toThrow());
+
+  it("gives leftover percent paise to the lowest user id", () =>
+    expect(
+      percentSplits(10001, [
+        { userId: 3, percent: 34 },
+        { userId: 1, percent: 33 },
+        { userId: 2, percent: 33 },
+      ]),
+    ).toEqual([
+      { userId: 1, percent: 33, sharePaise: 3301 },
+      { userId: 2, percent: 33, sharePaise: 3300 },
+      { userId: 3, percent: 34, sharePaise: 3400 },
+    ]));
+
+  it("preserves the exact total after percent rounding", () => {
+    for (const amount of [1, 7, 99, 101, 999, 100000, 999999])
+      expect(
+        total(
+          percentSplits(amount, [
+            { userId: 1, percent: 34 },
+            { userId: 2, percent: 33 },
+            { userId: 3, percent: 33 },
+          ]),
+        ),
+      ).toBe(amount);
+  });
+});
+
+describe("calculateSplits dispatch", () => {
+  it("routes equal splits through the equal calculator", () =>
+    expect(
+      calculateSplits(100, "EQUAL", [{ userId: 1 }, { userId: 2 }]),
+    ).toEqual([
+      { userId: 1, sharePaise: 50 },
+      { userId: 2, sharePaise: 50 },
+    ]));
+
+  it("routes exact splits through the exact calculator", () =>
+    expect(
+      calculateSplits(100, "EXACT", [
+        { userId: 1, sharePaise: 60 },
+        { userId: 2, sharePaise: 40 },
+      ]),
+    ).toEqual([
+      { userId: 1, sharePaise: 60 },
+      { userId: 2, sharePaise: 40 },
+    ]));
+
+  it("routes percent splits through the percent calculator", () =>
+    expect(
+      calculateSplits(100, "PERCENT", [
+        { userId: 1, percent: 60 },
+        { userId: 2, percent: 40 },
+      ]),
+    ).toEqual([
+      { userId: 1, percent: 60, sharePaise: 60 },
+      { userId: 2, percent: 40, sharePaise: 40 },
+    ]));
+
+  it("rejects an unknown split type", () =>
+    expect(() => calculateSplits(100, "RATIO", [{ userId: 1 }])).toThrow());
+});
+
 describe("debts and balances", () => {
   it("is deterministic and settles in n-1 transactions", () =>
     expect(simplifyDebts({ 1: -50, 2: -50, 3: 100 })).toEqual([
