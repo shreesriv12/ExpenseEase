@@ -212,6 +212,102 @@ function AddMember({ group, onDone }) {
   );
 }
 
+const SPLIT_TYPES = [
+  { value: "EQUAL", label: "Equal" },
+  { value: "EXACT", label: "Exact" },
+  { value: "PERCENT", label: "Percentage" },
+];
+
+function readParticipants(form, members, splitType, amountPaise) {
+  const participants = members.map((member) => {
+    const userId = Number(member.user.id);
+    if (splitType === "EXACT")
+      return {
+        userId,
+        sharePaise: Math.round(Number(form.get(`exact-${userId}`) || 0) * 100),
+      };
+    if (splitType === "PERCENT")
+      return { userId, percent: Number(form.get(`percent-${userId}`) || 0) };
+    return { userId };
+  });
+
+  if (splitType === "EXACT") {
+    const total = participants.reduce((sum, p) => sum + p.sharePaise, 0);
+    if (total !== amountPaise)
+      return { error: `Exact shares must total ${formatMoney(amountPaise)}.` };
+  }
+
+  if (splitType === "PERCENT") {
+    if (participants.some((p) => !Number.isInteger(p.percent)))
+      return { error: "Percentages must be whole numbers." };
+    const total = participants.reduce((sum, p) => sum + p.percent, 0);
+    if (total !== 100)
+      return { error: "Percentage shares must total exactly 100%." };
+  }
+
+  return { participants };
+}
+
+function SplitFields({ members, splitType, setSplitType, defaults = {} }) {
+  return (
+    <>
+      <label>
+        Split type
+        <select
+          value={splitType}
+          onChange={(e) => setSplitType(e.target.value)}
+        >
+          {SPLIT_TYPES.map((type) => (
+            <option key={type.value} value={type.value}>
+              {type.label}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {splitType === "EXACT" && (
+        <div className="member-splits">
+          {members.map((member) => (
+            <label key={member.user.id}>
+              {member.user.name} share (₹)
+              <input
+                name={`exact-${member.user.id}`}
+                type="number"
+                min="0"
+                step="0.01"
+                defaultValue={defaults.exact?.[member.user.id] ?? 0}
+                required
+              />
+            </label>
+          ))}
+        </div>
+      )}
+
+      {splitType === "PERCENT" && (
+        <div className="member-splits">
+          {members.map((member) => (
+            <label key={member.user.id}>
+              {member.user.name} share (%)
+              <input
+                name={`percent-${member.user.id}`}
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                defaultValue={defaults.percent?.[member.user.id] ?? 0}
+                required
+              />
+            </label>
+          ))}
+          <p className="hint">
+            Whole percentages only. Shares must total exactly 100%.
+          </p>
+        </div>
+      )}
+    </>
+  );
+}
+
 function AddExpense({ group, onDone }) {
   const [error, setError] = useState("");
   const [splitType, setSplitType] = useState("EQUAL");
@@ -221,43 +317,15 @@ function AddExpense({ group, onDone }) {
     setError("");
     const form = new FormData(e.target);
     const amountPaise = Math.round(Number(form.get("amount")) * 100);
-
-    const participants = group.members.map((member) => {
-      const userId = Number(member.user.id);
-      if (splitType === "EXACT") {
-        return {
-          userId,
-          sharePaise: Math.round(Number(form.get(`exact-${userId}`) || 0) * 100),
-        };
-      }
-      if (splitType === "PERCENT") {
-        return {
-          userId,
-          percent: Number(form.get(`percent-${userId}`) || 0),
-        };
-      }
-      return { userId };
-    });
-
-    if (splitType === "EXACT") {
-      const total = participants.reduce((sum, item) => sum + item.sharePaise, 0);
-      if (total !== amountPaise) {
-        setError(`Exact shares must total ${formatMoney(amountPaise)}.`);
-        return;
-      }
-    }
-
-    if (splitType === "PERCENT") {
-      const hasFraction = participants.some((item) => !Number.isInteger(item.percent));
-      if (hasFraction) {
-        setError("Percentages must be whole numbers.");
-        return;
-      }
-      const total = participants.reduce((sum, item) => sum + item.percent, 0);
-      if (total !== 100) {
-        setError("Percentage shares must total exactly 100%.");
-        return;
-      }
+    const { participants, error: splitError } = readParticipants(
+      form,
+      group.members,
+      splitType,
+      amountPaise,
+    );
+    if (splitError) {
+      setError(splitError);
+      return;
     }
 
     try {
@@ -304,59 +372,120 @@ function AddExpense({ group, onDone }) {
             ))}
           </select>
         </label>
-        <label>
-          Split type
-          <select value={splitType} onChange={(e) => setSplitType(e.target.value)}>
-            <option value="EQUAL">Equal</option>
-            <option value="EXACT">Exact</option>
-            <option value="PERCENT">Percentage</option>
-          </select>
-        </label>
 
-        {splitType === "EXACT" && (
-          <div className="member-splits">
-            {group.members.map((member) => (
-              <label key={member.user.id}>
-                {member.user.name} share (₹)
-                <input
-                  name={`exact-${member.user.id}`}
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  defaultValue="0"
-                  required
-                />
-              </label>
-            ))}
-          </div>
-        )}
-
-        {splitType === "PERCENT" && (
-          <div className="member-splits">
-            {group.members.map((member) => (
-              <label key={member.user.id}>
-                {member.user.name} share (%)
-                <input
-                  name={`percent-${member.user.id}`}
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="1"
-                  defaultValue="0"
-                  required
-                />
-              </label>
-            ))}
-            <p className="hint">
-              Whole percentages only. Shares must total exactly 100%.
-            </p>
-          </div>
-        )}
+        <SplitFields
+          members={group.members}
+          splitType={splitType}
+          setSplitType={setSplitType}
+        />
 
         <button>Add expense</button>
       </form>
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
     </section>
+  );
+}
+
+function EditExpense({ group, expense, onDone, onCancel }) {
+  const [error, setError] = useState("");
+  const [splitType, setSplitType] = useState(expense.splitType);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setError("");
+    const form = new FormData(e.target);
+    const amountPaise = Math.round(Number(form.get("amount")) * 100);
+    const { participants, error: splitError } = readParticipants(
+      form,
+      group.members,
+      splitType,
+      amountPaise,
+    );
+    if (splitError) {
+      setError(splitError);
+      return;
+    }
+
+    try {
+      await api.put("/expenses/" + expense.id, {
+        description: form.get("description"),
+        amountPaise,
+        category: form.get("category") || "General",
+        date: expense.date,
+        paidById: Number(form.get("payer")),
+        splitType,
+        participants,
+      });
+      onDone();
+    } catch (err) {
+      setError(errorText(err));
+    }
+  };
+
+  const defaults = {
+    exact: Object.fromEntries(
+      expense.splits.map((s) => [s.userId, (s.sharePaise / 100).toFixed(2)]),
+    ),
+    percent: Object.fromEntries(
+      expense.splits.map((s) => [s.userId, s.percent ?? 0]),
+    ),
+  };
+
+  return (
+    <form onSubmit={submit} className="inline" aria-label="Edit expense">
+      <label>
+        Description
+        <input name="description" defaultValue={expense.description} required />
+      </label>
+      <label>
+        Amount (₹)
+        <input
+          name="amount"
+          type="number"
+          min="0.01"
+          step="0.01"
+          defaultValue={(expense.amountPaise / 100).toFixed(2)}
+          required
+        />
+      </label>
+      <label>
+        Category
+        <input name="category" defaultValue={expense.category} required />
+      </label>
+      <label>
+        Payer
+        <select name="payer" defaultValue={expense.paidById}>
+          {group.members.map((member) => (
+            <option key={member.user.id} value={member.user.id}>
+              {member.user.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <SplitFields
+        members={group.members}
+        splitType={splitType}
+        setSplitType={setSplitType}
+        defaults={defaults}
+      />
+
+      <div className="row">
+        <button>Save changes</button>
+        <button type="button" className="link" onClick={onCancel}>
+          Cancel
+        </button>
+      </div>
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
+    </form>
   );
 }
 
@@ -429,12 +558,30 @@ function RecordSettlement({ group, onDone }) {
   );
 }
 
-function GroupDetail({ group, onBack }) {
+function GroupDetail({ group, currentUserId, onBack }) {
   const [tab, setTab] = useState("expenses");
   const [expenses, setExpenses] = useState([]);
   const [balances, setBalances] = useState(null);
   const [activity, setActivity] = useState([]);
   const [error, setError] = useState("");
+  const [editingId, setEditingId] = useState(null);
+
+  const myRole = group.members.find(
+    (member) => member.user.id === currentUserId,
+  )?.role;
+  const canModify = (expense) =>
+    myRole === "ADMIN" || expense.createdById === currentUserId;
+
+  const removeExpense = async (expense) => {
+    if (!window.confirm(`Delete "${expense.description}"?`)) return;
+    try {
+      await api.delete("/expenses/" + expense.id);
+      setEditingId(null);
+      refresh();
+    } catch (err) {
+      setError(errorText(err));
+    }
+  };
 
   const refresh = async () => {
     try {
@@ -500,15 +647,45 @@ function GroupDetail({ group, onBack }) {
               <ul>
                 {expenses.map((item) => (
                   <li key={item.id}>
-                    <div>
-                      <strong>{item.description}</strong>
-                      <div>
-                        {formatMoney(item.amountPaise)} · {item.category}
-                      </div>
-                    </div>
-                    <span>
-                      Paid by {item.paidBy.name}
-                    </span>
+                    {editingId === item.id ? (
+                      <EditExpense
+                        group={group}
+                        expense={item}
+                        onDone={() => {
+                          setEditingId(null);
+                          refresh();
+                        }}
+                        onCancel={() => setEditingId(null)}
+                      />
+                    ) : (
+                      <>
+                        <div>
+                          <strong>{item.description}</strong>
+                          <div>
+                            {formatMoney(item.amountPaise)} · {item.category}
+                          </div>
+                        </div>
+                        <span>Paid by {item.paidBy.name}</span>
+                        {canModify(item) && (
+                          <div className="row">
+                            <button
+                              type="button"
+                              className="link"
+                              onClick={() => setEditingId(item.id)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              className="link danger"
+                              onClick={() => removeExpense(item)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -618,6 +795,7 @@ export default function App() {
     return (
       <GroupDetail
         group={selected}
+        currentUserId={user.id}
         onBack={() => {
           setSelected(null);
           load();
