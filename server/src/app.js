@@ -16,6 +16,13 @@ app.use(
   rateLimit({
     windowMs: 60000,
     max: Number(process.env.AUTH_RATE_LIMIT_MAX) || 20,
+    handler: (req, res) =>
+      res.status(429).json({
+        error: {
+          code: "RATE_LIMITED",
+          message: "Too many attempts. Please wait a minute and try again.",
+        },
+      }),
   }),
   authRoutes,
 );
