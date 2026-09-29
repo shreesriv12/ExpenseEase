@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ExpenseEase - Goa Weekend Balances</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed": "#001d31",
+            "surface-bright": "#f8f9ff",
+            "background": "#f8f9ff",
+            "surface": "#f8f9ff",
+            "on-surface": "#0b1c30",
+            "on-primary-container": "#f4fffc",
+            "surface-container-highest": "#d3e4fe",
+            "inverse-primary": "#6bd8cb",
+            "on-primary-fixed": "#00201d",
+            "on-secondary-container": "#00476e",
+            "on-surface-variant": "#3d4947",
+            "tertiary-fixed": "#85f8c4",
+            "primary-fixed": "#89f5e7",
+            "on-tertiary-container": "#f5fff7",
+            "primary-fixed-dim": "#6bd8cb",
+            "surface-container-high": "#dce9ff",
+            "on-tertiary": "#ffffff",
+            "secondary": "#006398",
+            "primary-container": "#008378",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed-variant": "#004b73",
+            "on-tertiary-fixed": "#002114",
+            "inverse-surface": "#213145",
+            "tertiary-container": "#00855d",
+            "on-background": "#0b1c30",
+            "surface-tint": "#006a61",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "surface-container-low": "#eff4ff",
+            "surface-variant": "#d3e4fe",
+            "secondary-container": "#5bb8fe",
+            "surface-container": "#e5eeff",
+            "on-error-container": "#93000a",
+            "secondary-fixed": "#cce5ff",
+            "primary": "#00685f",
+            "on-primary": "#ffffff",
+            "outline-variant": "#bcc9c6",
+            "on-tertiary-fixed-variant": "#005137",
+            "error": "#ba1a1a",
+            "tertiary": "#006948",
+            "on-secondary": "#ffffff",
+            "surface-dim": "#cbdbf5",
+            "on-primary-fixed-variant": "#005049",
+            "secondary-fixed-dim": "#93ccff",
+            "tertiary-fixed-dim": "#68dba9",
+            "outline": "#6d7a77"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-xl": "2rem",
+            "space-sm": "0.5rem",
+            "margin": "1rem",
+            "gutter-lg": "2rem",
+            "margin-lg": "3rem",
+            "gutter-md": "1.5rem",
+            "margin-md": "1.5rem",
+            "gutter": "1rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem"
+          },
+          "fontFamily": {
+            "label-sm": ["Inter"],
+            "headline-sm": ["Inter"],
+            "label-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "currency-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "display": ["Inter"],
+            "currency-display": ["Inter"],
+            "title-md": ["Inter"],
+            "headline-lg": ["Inter"],
+            "headline-md": ["Inter"]
+          },
+          "fontSize": {
+            "label-sm": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-lg": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "body-md": ["0.875rem", { "lineHeight": "1.375rem", "fontWeight": "400" }],
+            "body-lg": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "currency-md": ["1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["0.75rem", { "lineHeight": "1.125rem", "fontWeight": "400" }],
+            "headline-lg-mobile": ["1.625rem", { "lineHeight": "2.125rem", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "display": ["3rem", { "lineHeight": "3.5rem", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "currency-display": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "title-md": ["1.125rem", { "lineHeight": "1.625rem", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "headline-lg": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#f8f9fa] text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface-container-lowest border-b border-outline-variant w-full sticky top-0 z-50">
+<div class="w-full max-w-[1200px] mx-auto px-margin-md md:px-margin-lg flex items-center justify-between h-16">
+<!-- Brand & Primary Nav Links -->
+<div class="flex items-center gap-space-lg">
+<a class="text-headline-md font-headline-md text-primary tracking-tight" href="#">
+          ExpenseEase
+        </a>
+<nav class="hidden md:flex items-center gap-space-md ml-space-md">
+<a class="text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors" href="#">
+            Dashboard
+          </a>
+<a class="border-b-2 border-primary text-primary font-title-md text-title-md pb-1" href="#">
+            Groups
+          </a>
+<a class="text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors" href="#">
+            Activity
+          </a>
+<a class="text-on-surface-variant hover:text-primary font-body-md text-body-md transition-colors" href="#">
+            Settlements
+          </a>
+</nav>
+</div>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center gap-space-sm">
+<button class="hidden sm:inline-flex items-center justify-center bg-surface-container-lowest border border-outline-variant text-on-surface font-label-lg text-label-lg px-space-md h-10 rounded-lg hover:bg-surface-container-low transition-colors active:scale-[0.98]" type="button">
+          Settle Up
+        </button>
+<button class="inline-flex items-center justify-center bg-primary text-on-primary font-label-lg text-label-lg px-space-md h-10 rounded-lg hover:bg-[#005049] transition-colors active:scale-[0.98]" type="button">
+          Add Expense
+        </button>
+<!-- Icon Actions -->
+<button aria-label="Notifications" class="p-2 text-on-surface-variant hover:text-primary rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button aria-label="Help" class="p-2 text-on-surface-variant hover:text-primary rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<!-- User Initials Avatar -->
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant text-primary font-label-sm text-label-sm flex items-center justify-center font-semibold ml-space-xs" title="User avatar profile photo">
+          AS
+        </div>
+</div>
+</div>
+</header>
+<!-- Page Main Container -->
+<main class="flex-1 w-full max-w-[1200px] mx-auto px-margin-md md:px-margin-lg py-space-lg">
+<!-- Top Back Navigation & Header -->
+<div class="mb-space-lg">
+<a class="inline-flex items-center text-on-surface-variant hover:text-primary font-body-sm text-body-sm transition-colors mb-space-xs" href="#">
+<span class="material-symbols-outlined mr-1 text-sm leading-none" data-icon="arrow_back">arrow_back</span>
+        All groups
+      </a>
+<div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mt-1">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-on-surface">Goa Weekend</h1>
+<p class="text-on-surface-variant font-body-md text-body-md">Demo trip expenses</p>
+</div>
+</div>
+</div>
+<!-- Members Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg p-space-md mb-space-lg">
+<h2 class="text-label-lg font-label-lg text-on-surface mb-space-sm">Members (4 members)</h2>
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Asha -->
+<div class="inline-flex items-center gap-2 px-space-sm py-1 rounded-full bg-surface-container-low border border-outline-variant">
+<span class="w-5 h-5 rounded-full bg-primary text-on-primary text-[10px] font-semibold flex items-center justify-center">A</span>
+<span class="font-label-sm text-label-sm text-on-surface">Asha</span>
+<span class="text-[10px] font-semibold px-1.5 py-0.2 bg-teal-50 text-primary border border-teal-200 rounded">ADMIN</span>
+</div>
+<!-- Bharat -->
+<div class="inline-flex items-center gap-2 px-space-sm py-1 rounded-full bg-surface-container-low border border-outline-variant">
+<span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface text-[10px] font-semibold flex items-center justify-center">B</span>
+<span class="font-label-sm text-label-sm text-on-surface">Bharat</span>
+<span class="text-[10px] font-medium px-1.5 py-0.2 bg-surface-container text-on-surface-variant rounded">MEMBER</span>
+</div>
+<!-- Chitra -->
+<div class="inline-flex items-center gap-2 px-space-sm py-1 rounded-full bg-surface-container-low border border-outline-variant">
+<span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface text-[10px] font-semibold flex items-center justify-center">C</span>
+<span class="font-label-sm text-label-sm text-on-surface">Chitra</span>
+<span class="text-[10px] font-medium px-1.5 py-0.2 bg-surface-container text-on-surface-variant rounded">MEMBER</span>
+</div>
+<!-- Dev -->
+<div class="inline-flex items-center gap-2 px-space-sm py-1 rounded-full bg-surface-container-low border border-outline-variant">
+<span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface text-[10px] font-semibold flex items-center justify-center">D</span>
+<span class="font-label-sm text-label-sm text-on-surface">Dev</span>
+<span class="text-[10px] font-medium px-1.5 py-0.2 bg-surface-container text-on-surface-variant rounded">MEMBER</span>
+</div>
+</div>
+</section>
+<!-- Tabs Bar -->
+<div class="border-b border-outline-variant mb-space-lg">
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+          Expenses
+        </button>
+<button class="px-space-md py-space-sm font-label-lg text-label-lg bg-primary text-on-primary rounded-t-lg transition-colors" type="button">
+          Balances
+        </button>
+<button class="px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+          Activity
+        </button>
+</div>
+</div>
+<!-- Two-Column Grid Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column: Member balances (5 of 12 cols on desktop) -->
+<section class="lg:col-span-5 bg-surface-container-lowest border border-outline-variant rounded-lg p-space-md">
+<div class="mb-space-md pb-space-sm border-b border-outline-variant">
+<h2 class="text-title-md font-title-md text-on-surface">Member balances</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Net position in this group</p>
+</div>
+<ul class="divide-y divide-outline-variant">
+<!-- Asha (+₹800.00) -->
+<li class="py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-primary text-on-primary font-semibold flex items-center justify-center font-label-lg text-label-lg">
+                A
+              </div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface leading-tight">Asha</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Group administrator</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-currency-md text-currency-md text-[#10b981] tabular-nums font-semibold">+₹800.00</p>
+<p class="font-body-sm text-body-sm text-[#10b981]">gets back</p>
+</div>
+</li>
+<!-- Bharat (-₹200.00) -->
+<li class="py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-surface-container-high text-on-surface font-semibold flex items-center justify-center font-label-lg text-label-lg">
+                B
+              </div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface leading-tight">Bharat</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Member</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-currency-md text-currency-md text-[#ef4444] tabular-nums font-semibold">-₹200.00</p>
+<p class="font-body-sm text-body-sm text-[#ef4444]">owes</p>
+</div>
+</li>
+<!-- Chitra (-₹300.00) -->
+<li class="py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-surface-container-high text-on-surface font-semibold flex items-center justify-center font-label-lg text-label-lg">
+                C
+              </div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface leading-tight">Chitra</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Member</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-currency-md text-currency-md text-[#ef4444] tabular-nums font-semibold">-₹300.00</p>
+<p class="font-body-sm text-body-sm text-[#ef4444]">owes</p>
+</div>
+</li>
+<!-- Dev (-₹300.00) -->
+<li class="py-space-sm flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-full bg-surface-container-high text-on-surface font-semibold flex items-center justify-center font-label-lg text-label-lg">
+                D
+              </div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface leading-tight">Dev</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Member</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-currency-md text-currency-md text-[#ef4444] tabular-nums font-semibold">-₹300.00</p>
+<p class="font-body-sm text-body-sm text-[#ef4444]">owes</p>
+</div>
+</li>
+</ul>
+<!-- Summary Row -->
+<div class="mt-space-md pt-space-sm border-t-2 border-outline-variant flex items-center justify-between">
+<div>
+<p class="font-label-lg text-label-lg text-on-surface font-semibold">Total</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Group net equilibrium</p>
+</div>
+<p class="font-currency-md text-currency-md text-on-surface-variant tabular-nums">₹0.00</p>
+</div>
+</section>
+<!-- Right Column: Settle up + Record settlement (7 of 12 cols on desktop) -->
+<div class="lg:col-span-7 flex flex-col gap-space-lg">
+<!-- Card 1: Settle up suggestions -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg p-space-md">
+<div class="mb-space-md pb-space-sm border-b border-outline-variant">
+<h2 class="text-title-md font-title-md text-on-surface">Settle up</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Suggested from current balances</p>
+</div>
+<div class="flex flex-col divide-y divide-outline-variant">
+<!-- Suggestion 1 -->
+<div class="py-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-base" data-icon="payments">payments</span>
+<span class="font-label-lg text-label-lg text-on-surface">Dev pays Asha</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-currency-md text-currency-md text-on-surface tabular-nums font-semibold">₹300.00</span>
+<button class="h-8 px-3 inline-flex items-center justify-center border border-outline-variant hover:border-primary text-primary font-label-sm text-label-sm rounded hover:bg-surface-container-low transition-colors" type="button">
+                  Mark paid
+                </button>
+</div>
+</div>
+<!-- Suggestion 2 -->
+<div class="py-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-base" data-icon="payments">payments</span>
+<span class="font-label-lg text-label-lg text-on-surface">Chitra pays Asha</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-currency-md text-currency-md text-on-surface tabular-nums font-semibold">₹300.00</span>
+<button class="h-8 px-3 inline-flex items-center justify-center border border-outline-variant hover:border-primary text-primary font-label-sm text-label-sm rounded hover:bg-surface-container-low transition-colors" type="button">
+                  Mark paid
+                </button>
+</div>
+</div>
+<!-- Suggestion 3 -->
+<div class="py-space-sm flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-base" data-icon="payments">payments</span>
+<span class="font-label-lg text-label-lg text-on-surface">Bharat pays Asha</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-currency-md text-currency-md text-on-surface tabular-nums font-semibold">₹200.00</span>
+<button class="h-8 px-3 inline-flex items-center justify-center border border-outline-variant hover:border-primary text-primary font-label-sm text-label-sm rounded hover:bg-surface-container-low transition-colors" type="button">
+                  Mark paid
+                </button>
+</div>
+</div>
+</div>
+<!-- Subtle Helper Callout -->
+<div class="mt-space-md p-space-sm bg-surface-container-low rounded border border-outline-variant flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-base mt-0.5" data-icon="info">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Everyone is settled up when these are recorded. No outstanding balances in this group.
+            </p>
+</div>
+</section>
+<!-- Card 2: Record settlement form -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg p-space-md">
+<div class="mb-space-md pb-space-sm border-b border-outline-variant">
+<h2 class="text-title-md font-title-md text-on-surface">Record settlement</h2>
+<p class="text-body-sm font-body-sm text-on-surface-variant">Log a payment someone already made</p>
+</div>
+<form class="space-y-space-md" onsubmit="event.preventDefault();">
+<!-- From & To Dropdowns -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1" for="settle-from">From</label>
+<select class="w-full h-11 px-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="settle-from">
+<option selected="" value="Bharat">Bharat</option>
+<option value="Chitra">Chitra</option>
+<option value="Dev">Dev</option>
+<option value="Asha">Asha</option>
+</select>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1" for="settle-to">To</label>
+<select class="w-full h-11 px-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="settle-to">
+<option selected="" value="Asha">Asha</option>
+<option value="Bharat">Bharat</option>
+<option value="Chitra">Chitra</option>
+<option value="Dev">Dev</option>
+</select>
+</div>
+</div>
+<!-- Amount Input -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1" for="settle-amount">Amount (₹)</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none font-body-md text-body-md text-on-surface-variant">
+                  ₹
+                </span>
+<input class="w-full h-11 pl-8 pr-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors tabular-nums" id="settle-amount" placeholder="0.00" type="text"/>
+</div>
+</div>
+<!-- Note Input -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface mb-1" for="settle-note">Note</label>
+<input class="w-full h-11 px-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="settle-note" placeholder="e.g. Partial hotel repayment" type="text"/>
+</div>
+<!-- Submit Button & Helper text -->
+<div class="pt-space-xs">
+<button class="w-full h-11 bg-primary hover:bg-[#005049] text-on-primary font-label-lg text-label-lg rounded-lg transition-colors flex items-center justify-center active:scale-[0.98]" type="submit">
+                Record settlement
+              </button>
+<p class="text-center font-body-sm text-body-sm text-on-surface-variant mt-2">
+                This records a payment. It does not move money.
+              </p>
+</div>
+</form>
+</section>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant w-full mt-space-xl">
+<div class="w-full py-space-lg px-margin-md md:px-margin-lg max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-space-sm">
+<div class="flex flex-col sm:flex-row items-center gap-2">
+<span class="text-title-md font-title-md text-primary">ExpenseEase</span>
+<span class="hidden sm:inline text-outline">•</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant text-center sm:text-left">
+          © 2024 ExpenseEase. Transparent split finance for student communities.
+        </span>
+</div>
+<div class="flex items-center gap-space-md">
+<a class="text-on-surface-variant font-body-sm text-body-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-body-sm text-body-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-body-sm text-body-sm hover:text-primary transition-colors" href="#">Campus Safety</a>
+<a class="text-on-surface-variant font-body-sm text-body-sm hover:text-primary transition-colors" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>
