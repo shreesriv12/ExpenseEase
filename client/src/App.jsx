@@ -6,7 +6,7 @@ const errorText = (error) =>
   error.response?.data?.error?.message ||
   "Something went wrong. Please try again.";
 
-function Login({ onLogin }) {
+function Login({ onLogin, onSwitch }) {
   const [error, setError] = useState("");
   const submit = async (e) => {
     e.preventDefault();
@@ -47,10 +47,79 @@ function Login({ onLogin }) {
             required
           />
         </label>
-        {error && <p className="error">{error}</p>}
+        {error && (
+          <p className="error" role="alert">
+            {error}
+          </p>
+        )}
         <button>Log in</button>
       </form>
       <small>Demo: asha@demo.local / Demo@1234</small>
+      <p>
+        <button type="button" className="link" onClick={onSwitch}>
+          Need an account? Register
+        </button>
+      </p>
+    </main>
+  );
+}
+
+function Register({ onLogin, onSwitch }) {
+  const [error, setError] = useState("");
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setError("");
+    const data = new FormData(e.target);
+    try {
+      const result = await api.post("/auth/register", {
+        name: data.get("name"),
+        email: data.get("email"),
+        password: data.get("password"),
+      });
+      localStorage.setItem("expenseEaseToken", result.data.token);
+      onLogin(result.data.user);
+    } catch (err) {
+      setError(errorText(err));
+    }
+  };
+
+  return (
+    <main className="auth">
+      <h1>Create your account</h1>
+      <p>Start splitting shared expenses with your group.</p>
+      <form onSubmit={submit}>
+        <label>
+          Name
+          <input name="name" required maxLength={100} autoComplete="name" />
+        </label>
+        <label>
+          Email
+          <input name="email" type="email" required autoComplete="email" />
+        </label>
+        <label>
+          Password
+          <input
+            name="password"
+            type="password"
+            required
+            minLength={8}
+            autoComplete="new-password"
+          />
+        </label>
+        {error && (
+          <p className="error" role="alert">
+            {error}
+          </p>
+        )}
+        <button>Register</button>
+      </form>
+      <small>Password must be at least 8 characters.</small>
+      <p>
+        <button type="button" className="link" onClick={onSwitch}>
+          Already registered? Log in
+        </button>
+      </p>
     </main>
   );
 }
@@ -499,6 +568,7 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [error, setError] = useState("");
   const [dashboardSummary, setDashboardSummary] = useState(null);
+  const [authMode, setAuthMode] = useState("login");
 
   const load = async () => {
     try {
@@ -534,7 +604,15 @@ export default function App() {
     }
   }, [user]);
 
-  if (!user) return <Login onLogin={setUser} />;
+  if (!user)
+    return authMode === "register" ? (
+      <Register
+        onLogin={setUser}
+        onSwitch={() => setAuthMode("login")}
+      />
+    ) : (
+      <Login onLogin={setUser} onSwitch={() => setAuthMode("register")} />
+    );
 
   if (selected)
     return (
