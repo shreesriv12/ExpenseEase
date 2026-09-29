@@ -179,9 +179,14 @@ function AddExpense({ group, onDone }) {
     }
 
     if (splitType === "PERCENT") {
+      const hasFraction = participants.some((item) => !Number.isInteger(item.percent));
+      if (hasFraction) {
+        setError("Percentages must be whole numbers.");
+        return;
+      }
       const total = participants.reduce((sum, item) => sum + item.percent, 0);
-      if (Math.abs(total - 100) > 0.0001) {
-        setError("Percentage shares must total exactly 100%. ");
+      if (total !== 100) {
+        setError("Percentage shares must total exactly 100%.");
         return;
       }
     }
@@ -267,12 +272,15 @@ function AddExpense({ group, onDone }) {
                   type="number"
                   min="0"
                   max="100"
-                  step="0.01"
+                  step="1"
                   defaultValue="0"
                   required
                 />
               </label>
             ))}
+            <p className="hint">
+              Whole percentages only. Shares must total exactly 100%.
+            </p>
           </div>
         )}
 

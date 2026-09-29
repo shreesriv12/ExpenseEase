@@ -94,6 +94,12 @@ li {
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
 }
+.hint {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #5b6472;
+  font-size: 0.85rem;
+}
 .error,
 .negative {
   color: #b42318;
