@@ -4,6 +4,13 @@ function httpError(status, code, message) {
   return Object.assign(new Error(message), { status, code });
 }
 
+// Single source of truth for the member shape. Every group response must
+// expose members as { userId, role, user: { id, name, email } } so the
+// client can read member.user.id / member.user.name consistently.
+const memberUser = { user: { select: { id: true, name: true, email: true } } };
+// Used where members are a nested relation on Group.
+const membersRelation = { include: memberUser };
+
 export async function requireMembership(groupId, userId) {
   const membership = await prisma.groupMember.findUnique({
     where: { groupId_userId: { groupId, userId } },
@@ -16,11 +23,7 @@ export async function requireMembership(groupId, userId) {
 export async function listGroups(userId) {
   return prisma.group.findMany({
     where: { members: { some: { userId } } },
-    include: {
-      members: {
-        include: { user: { select: { id: true, name: true, email: true } } },
-      },
-    },
+    include: { members: membersRelation },
     orderBy: { createdAt: "desc" },
   });
 }
@@ -33,7 +36,7 @@ export async function createGroup(userId, data) {
       createdById: userId,
       members: { create: { userId, role: "ADMIN" } },
     },
-    include: { members: true },
+    include: { members: membersRelation },
   });
 }
 
@@ -41,11 +44,7 @@ export async function getGroup(groupId, userId) {
   await requireMembership(groupId, userId);
   const group = await prisma.group.findUnique({
     where: { id: groupId },
-    include: {
-      members: {
-        include: { user: { select: { id: true, name: true, email: true } } },
-      },
-    },
+    include: { members: membersRelation },
   });
   if (!group) throw httpError(404, "NOT_FOUND", "Group not found");
   return group;
@@ -67,5 +66,8 @@ export async function addMember(groupId, actorId, email) {
   });
   if (exists)
     throw httpError(409, "DUPLICATE_MEMBER", "User is already a group member");
-  return prisma.groupMember.create({ data: { groupId, userId: user.id } });
+  return prisma.groupMember.create({
+    data: { groupId, userId: user.id },
+    include: memberUser,
+  });
 }
