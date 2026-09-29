@@ -1,2 +1,49 @@
-import {describe,it,expect} from 'vitest';import {equalSplits,exactSplits,percentSplits} from '../src/services/splits.js';import {simplifyDebts} from '../src/services/debtSimplifier.js';import {computeBalances} from '../src/services/balances.js';
-describe('split calculations',()=>{it('assigns equal remainders by user id',()=>expect(equalSplits(10000,[3,1,2])).toEqual([{userId:1,sharePaise:3334},{userId:2,sharePaise:3333},{userId:3,sharePaise:3333}]));it('rejects invalid exact total',()=>expect(()=>exactSplits(100,[{userId:1,sharePaise:99}])).toThrow());it('allocates percent rounding',()=>expect(percentSplits(101,[{userId:2,percent:50},{userId:1,percent:50}]).reduce((a,s)=>a+s.sharePaise,0)).toBe(101));});describe('debts and balances',()=>{it('is deterministic and settles in n-1 transactions',()=>expect(simplifyDebts({1:-50,2:-50,3:100})).toEqual([{from:1,to:3,amount:50},{from:2,to:3,amount:50}]));it('preserves sum-zero invariant',()=>{const b=computeBalances([{userId:1},{userId:2}],[{paidById:1,amountPaise:100,splits:[{userId:1,sharePaise:50},{userId:2,sharePaise:50}]}],[]);expect(b).toEqual({1:50,2:-50});});});
+import { describe, it, expect } from "vitest";
+import {
+  equalSplits,
+  exactSplits,
+  percentSplits,
+} from "../src/services/splits.js";
+import { simplifyDebts } from "../src/services/debtSimplifier.js";
+import { computeBalances } from "../src/services/balances.js";
+describe("split calculations", () => {
+  it("assigns equal remainders by user id", () =>
+    expect(equalSplits(10000, [3, 1, 2])).toEqual([
+      { userId: 1, sharePaise: 3334 },
+      { userId: 2, sharePaise: 3333 },
+      { userId: 3, sharePaise: 3333 },
+    ]));
+  it("rejects invalid exact total", () =>
+    expect(() => exactSplits(100, [{ userId: 1, sharePaise: 99 }])).toThrow());
+  it("allocates percent rounding", () =>
+    expect(
+      percentSplits(101, [
+        { userId: 2, percent: 50 },
+        { userId: 1, percent: 50 },
+      ]).reduce((a, s) => a + s.sharePaise, 0),
+    ).toBe(101));
+});
+describe("debts and balances", () => {
+  it("is deterministic and settles in n-1 transactions", () =>
+    expect(simplifyDebts({ 1: -50, 2: -50, 3: 100 })).toEqual([
+      { from: 1, to: 3, amount: 50 },
+      { from: 2, to: 3, amount: 50 },
+    ]));
+  it("preserves sum-zero invariant", () => {
+    const b = computeBalances(
+      [{ userId: 1 }, { userId: 2 }],
+      [
+        {
+          paidById: 1,
+          amountPaise: 100,
+          splits: [
+            { userId: 1, sharePaise: 50 },
+            { userId: 2, sharePaise: 50 },
+          ],
+        },
+      ],
+      [],
+    );
+    expect(b).toEqual({ 1: 50, 2: -50 });
+  });
+});

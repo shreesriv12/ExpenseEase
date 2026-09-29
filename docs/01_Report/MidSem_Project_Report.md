@@ -26,13 +26,13 @@ Included scope is authentication, group membership, expenses, balances, settleme
 
 ## 5. Stakeholders
 
-| Stakeholder | Interest | Influence |
-|---|---|---|
-| Group member | Accurate shared costs | High |
-| Group admin | Membership and data oversight | High |
-| Course evaluator | Evidence of engineering practice | High |
-| Development team | Deliverable quality and learning | High |
-| Future maintainer | Clear design and tests | Medium |
+| Stakeholder       | Interest                         | Influence |
+| ----------------- | -------------------------------- | --------- |
+| Group member      | Accurate shared costs            | High      |
+| Group admin       | Membership and data oversight    | High      |
+| Course evaluator  | Evidence of engineering practice | High      |
+| Development team  | Deliverable quality and learning | High      |
+| Future maintainer | Clear design and tests           | Medium    |
 
 ## 6. Requirements specification
 
@@ -48,14 +48,14 @@ The browser SPA calls an Express REST API. Routes delegate to controllers and se
 
 ## 9. Technology stack and justification
 
-| Layer | Choice | Why |
-|---|---|---|
-| Frontend | React/Vite/Axios | Fast local SPA and API integration |
-| Backend | Node.js/Express | Small, familiar REST service |
-| Validation | Zod | Declarative input contracts |
-| Database | SQLite/Prisma | Zero-setup relational model |
-| Security | bcrypt/JWT/helmet | Password hashing and protected routes |
-| Tests | Vitest/Supertest | Fast unit and API-oriented testing |
+| Layer      | Choice            | Why                                   |
+| ---------- | ----------------- | ------------------------------------- |
+| Frontend   | React/Vite/Axios  | Fast local SPA and API integration    |
+| Backend    | Node.js/Express   | Small, familiar REST service          |
+| Validation | Zod               | Declarative input contracts           |
+| Database   | SQLite/Prisma     | Zero-setup relational model           |
+| Security   | bcrypt/JWT/helmet | Password hashing and protected routes |
+| Tests      | Vitest/Supertest  | Fast unit and API-oriented testing    |
 
 ## 10. Implementation progress
 
@@ -73,9 +73,9 @@ The Gantt plan and risk register are in the project-management documents. Backen
 
 ## 13. Individual contribution table
 
-| Member | Tasks done | Modules / commits | Percentage |
-|---|---|---|---|
-| <<FILL: name>> | <<FILL>> | <<FILL>> | <<FILL>> |
+| Member         | Tasks done | Modules / commits | Percentage |
+| -------------- | ---------- | ----------------- | ---------- |
+| <<FILL: name>> | <<FILL>>   | <<FILL>>          | <<FILL>>   |
 
 ## 14. Challenges faced and solutions attempted
 

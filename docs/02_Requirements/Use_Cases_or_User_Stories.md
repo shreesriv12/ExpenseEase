@@ -10,14 +10,14 @@ flowchart LR
  Member --> Settle[Record settlement]
 ```
 
-| ID | Use case | Preconditions | Main outcome |
-|---|---|---|---|
-| UC-01 | Register / login | Visitor has valid details | Authenticated session is issued |
-| UC-02 | Create group | User is authenticated | Creator becomes group admin |
-| UC-03 | Add expense | User is a group member | Valid splits total the amount |
-| UC-04 | View balances | User is a group member | Computed net balances are shown |
-| UC-05 | Simplify debts | Balances sum to zero | Deterministic suggested transfers are shown |
-| UC-06 | Record settlement | Both users are members | Settlement affects computed balances |
+| ID    | Use case          | Preconditions             | Main outcome                                |
+| ----- | ----------------- | ------------------------- | ------------------------------------------- |
+| UC-01 | Register / login  | Visitor has valid details | Authenticated session is issued             |
+| UC-02 | Create group      | User is authenticated     | Creator becomes group admin                 |
+| UC-03 | Add expense       | User is a group member    | Valid splits total the amount               |
+| UC-04 | View balances     | User is a group member    | Computed net balances are shown             |
+| UC-05 | Simplify debts    | Balances sum to zero      | Deterministic suggested transfers are shown |
+| UC-06 | Record settlement | Both users are members    | Settlement affects computed balances        |
 
 ## User stories
 

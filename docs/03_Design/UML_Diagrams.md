@@ -1,6 +1,7 @@
 # UML Diagrams
 
 ## Add expense sequence
+
 ```mermaid
 sequenceDiagram
  participant U as Member
@@ -15,6 +16,7 @@ sequenceDiagram
 ```
 
 ## Balance activity
+
 ```mermaid
 flowchart TD
  A[Load members, expenses, settlements] --> B[Compute net paise]
@@ -26,6 +28,7 @@ flowchart TD
 ```
 
 ## Backend class view
+
 ```mermaid
 classDiagram
  class GroupService
