@@ -23,6 +23,13 @@ async function access(id, userId) {
     membership: await requireMembership(expense.groupId, userId),
   };
 }
+function splitsFor(data) {
+  try {
+    return calculateSplits(data.amountPaise, data.splitType, data.participants);
+  } catch (cause) {
+    throw fail(400, "INVALID_SPLIT", cause.message);
+  }
+}
 export async function listExpenses(groupId, userId) {
   await requireMembership(groupId, userId);
   return prisma.expense.findMany({
@@ -37,11 +44,7 @@ export async function listExpenses(groupId, userId) {
 export async function createExpense(groupId, userId, data) {
   await requireMembership(groupId, userId);
   await people(groupId, data.paidById, data.participants);
-  const splits = calculateSplits(
-    data.amountPaise,
-    data.splitType,
-    data.participants,
-  );
+  const splits = splitsFor(data);
   return prisma.$transaction(async (tx) => {
     const expense = await tx.expense.create({
       data: {
@@ -85,11 +88,7 @@ export async function updateExpense(id, userId, data) {
       "Only the creator or group admin can edit this expense",
     );
   await people(expense.groupId, data.paidById, data.participants);
-  const splits = calculateSplits(
-    data.amountPaise,
-    data.splitType,
-    data.participants,
-  );
+  const splits = splitsFor(data);
   return prisma.$transaction(async (tx) => {
     const updated = await tx.expense.update({
       where: { id },
