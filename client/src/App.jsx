@@ -572,6 +572,10 @@ function GroupDetail({ group, currentUserId, onBack }) {
   const canModify = (expense) =>
     myRole === "ADMIN" || expense.createdById === currentUserId;
 
+  const nameOf = (userId) =>
+    group.members.find((member) => member.user.id === userId)?.user.name ??
+    `User ${userId}`;
+
   const removeExpense = async (expense) => {
     if (!window.confirm(`Delete "${expense.description}"?`)) return;
     try {
@@ -714,7 +718,8 @@ function GroupDetail({ group, currentUserId, onBack }) {
           {balances?.simplifiedSettlements.length ? (
             balances.simplifiedSettlements.map((item, index) => (
               <p key={index}>
-                {item.from} pays {item.to} {formatMoney(item.amount)}
+                {nameOf(item.from)} pays {nameOf(item.to)}{" "}
+                {formatMoney(item.amount)}
               </p>
             ))
           ) : (
