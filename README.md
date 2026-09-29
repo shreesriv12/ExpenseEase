@@ -1,6 +1,6 @@
 # ExpenseEase
 
-ExpenseEase is a local web app for recording shared expenses and calculating deterministic balances.
+ExpenseEase is a local web app for recording shared expenses and calculating deterministic balances. The current app supports login, group browsing, equal/exact/percentage split expenses, balance views, settlement recording, and activity tracking.
 
 ## Run locally
 
