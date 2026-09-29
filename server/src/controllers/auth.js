@@ -48,5 +48,12 @@ export async function login(req, res) {
 }
 export async function me(req, res) {
   const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+  if (!user)
+    return res.status(401).json({
+      error: {
+        code: "UNAUTHORIZED",
+        message: "This account no longer exists. Please sign in again.",
+      },
+    });
   res.json({ user: publicUser(user) });
 }
