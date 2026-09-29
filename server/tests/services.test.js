@@ -216,6 +216,102 @@ describe("calculateSplits dispatch", () => {
     expect(() => calculateSplits(100, "RATIO", [{ userId: 1 }])).toThrow());
 });
 
+describe("balances from records", () => {
+  const members = [{ userId: 1 }, { userId: 2 }, { userId: 3 }];
+  const expenses = [
+    {
+      paidById: 1,
+      amountPaise: 300,
+      splits: [
+        { userId: 1, sharePaise: 100 },
+        { userId: 2, sharePaise: 100 },
+        { userId: 3, sharePaise: 100 },
+      ],
+    },
+    {
+      paidById: 2,
+      amountPaise: 150,
+      splits: [
+        { userId: 1, sharePaise: 50 },
+        { userId: 2, sharePaise: 50 },
+        { userId: 3, sharePaise: 50 },
+      ],
+    },
+  ];
+
+  it("credits the payer for the full amount and debits each share", () =>
+    expect(computeBalances(members, [expenses[0]], [])).toEqual({
+      1: 200,
+      2: -100,
+      3: -100,
+    }));
+
+  it("accumulates several expenses for the same group", () =>
+    expect(computeBalances(members, expenses, [])).toEqual({
+      1: 150,
+      2: 0,
+      3: -150,
+    }));
+
+  it("moves value from the settling member to the receiver", () =>
+    expect(
+      computeBalances(members, expenses, [
+        { fromUserId: 3, toUserId: 1, amountPaise: 100 },
+      ]),
+    ).toEqual({ 1: 50, 2: 0, 3: -50 }));
+
+  it("accumulates several settlements", () =>
+    expect(
+      computeBalances(members, expenses, [
+        { fromUserId: 3, toUserId: 1, amountPaise: 100 },
+        { fromUserId: 3, toUserId: 1, amountPaise: 50 },
+      ]),
+    ).toEqual({ 1: 0, 2: 0, 3: 0 }));
+
+  it("leaves a non-participating member at zero", () =>
+    expect(
+      computeBalances(
+        [...members, { userId: 4 }],
+        [
+          {
+            paidById: 1,
+            amountPaise: 200,
+            splits: [
+              { userId: 2, sharePaise: 100 },
+              { userId: 3, sharePaise: 100 },
+            ],
+          },
+        ],
+        [],
+      ),
+    ).toEqual({ 1: 200, 2: -100, 3: -100, 4: 0 }));
+
+  it("keeps the sum of balances at zero", () => {
+    const balances = computeBalances(members, expenses, [
+      { fromUserId: 3, toUserId: 2, amountPaise: 25 },
+    ]);
+    expect(Object.values(balances).reduce((a, b) => a + b, 0)).toBe(0);
+  });
+
+  it("rejects records whose shares do not total the stored amount", () =>
+    expect(() =>
+      computeBalances(
+        [{ userId: 1 }, { userId: 2 }],
+        [
+          {
+            paidById: 1,
+            amountPaise: 100,
+            splits: [{ userId: 1, sharePaise: 60 }],
+          },
+        ],
+        [],
+      ),
+    ).toThrow("Balance invariant failed"));
+
+  it("returns every member even when the group has no records", () =>
+    expect(computeBalances(members, [], [])).toEqual({ 1: 0, 2: 0, 3: 0 }));
+});
+
 describe("debts and balances", () => {
   it("is deterministic and settles in n-1 transactions", () =>
     expect(simplifyDebts({ 1: -50, 2: -50, 3: 100 })).toEqual([
