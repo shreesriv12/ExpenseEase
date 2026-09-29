@@ -9,5 +9,6 @@ export default defineConfig({
       AUTH_RATE_LIMIT_MAX: "10000",
     },
     hookTimeout: 60000,
+    fileParallelism: false,
   },
 });
