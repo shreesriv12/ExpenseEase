@@ -3,13 +3,17 @@ import { app } from "../../src/app.js";
 import { prisma } from "../../src/config/prisma.js";
 
 export async function resetDatabase() {
+  await clearGroupData();
+  await prisma.user.deleteMany();
+}
+
+export async function clearGroupData() {
   await prisma.activity.deleteMany();
   await prisma.settlement.deleteMany();
   await prisma.expenseSplit.deleteMany();
   await prisma.expense.deleteMany();
   await prisma.groupMember.deleteMany();
   await prisma.group.deleteMany();
-  await prisma.user.deleteMany();
 }
 
 export const bearer = (token) => ({ Authorization: `Bearer ${token}` });
