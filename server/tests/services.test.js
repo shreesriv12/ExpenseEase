@@ -23,6 +23,48 @@ describe("split calculations", () => {
       ]).reduce((a, s) => a + s.sharePaise, 0),
     ).toBe(101));
 });
+describe("equal split rounding", () => {
+  const total = (splits) => splits.reduce((sum, s) => sum + s.sharePaise, 0);
+
+  it("splits evenly when the amount divides without remainder", () =>
+    expect(equalSplits(900, [1, 2, 3])).toEqual([
+      { userId: 1, sharePaise: 300 },
+      { userId: 2, sharePaise: 300 },
+      { userId: 3, sharePaise: 300 },
+    ]));
+
+  it("gives leftover paise to the lowest user ids", () =>
+    expect(equalSplits(100, [5, 2, 1])).toEqual([
+      { userId: 1, sharePaise: 34 },
+      { userId: 2, sharePaise: 33 },
+      { userId: 5, sharePaise: 33 },
+    ]));
+
+  it("returns the full amount to a single participant", () =>
+    expect(equalSplits(500, [7])).toEqual([{ userId: 7, sharePaise: 500 }]));
+
+  it("is independent of participant order", () =>
+    expect(equalSplits(10000, [3, 1, 2])).toEqual(
+      equalSplits(10000, [2, 3, 1]),
+    ));
+
+  it("preserves the exact total when the amount does not divide evenly", () => {
+    for (const amount of [1, 7, 99, 101, 999, 100000, 999999])
+      for (const size of [2, 3, 7, 11]) {
+        const userIds = Array.from({ length: size }, (_, i) => i + 1);
+        expect(total(equalSplits(amount, userIds))).toBe(amount);
+      }
+  });
+
+  it("rejects an amount that is not a positive integer", () => {
+    expect(() => equalSplits(0, [1, 2])).toThrow();
+    expect(() => equalSplits(-100, [1, 2])).toThrow();
+    expect(() => equalSplits(10.5, [1, 2])).toThrow();
+  });
+
+  it("rejects an empty participant list", () =>
+    expect(() => equalSplits(100, [])).toThrow());
+});
 describe("debts and balances", () => {
   it("is deterministic and settles in n-1 transactions", () =>
     expect(simplifyDebts({ 1: -50, 2: -50, 3: 100 })).toEqual([
