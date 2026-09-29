@@ -11,7 +11,14 @@ export const app = express();
 app.use(helmet());
 app.use(cors({ origin: process.env.CORS_ORIGIN || "http://localhost:5173" }));
 app.use(express.json());
-app.use("/api/auth", rateLimit({ windowMs: 60000, max: 20 }), authRoutes);
+app.use(
+  "/api/auth",
+  rateLimit({
+    windowMs: 60000,
+    max: Number(process.env.AUTH_RATE_LIMIT_MAX) || 20,
+  }),
+  authRoutes,
+);
 app.use("/api/groups", groupRoutes);
 app.use("/api", expenseRoutes);
 app.use("/api", groupDataRoutes);
