@@ -84,6 +84,7 @@ const groupRoutes = (list = [expense()], g = group) => ({
     "/auth/me": { user },
     "/groups": { groups: [g] },
     "/dashboard/summary": { youOwePaise: 5000, youAreOwedPaise: 0 },
+    "/groups/10": { group: g },
     "/groups/10/expenses": { expenses: list },
     "/groups/10/balances": {
       members: [
@@ -107,12 +108,12 @@ const groupRoutes = (list = [expense()], g = group) => ({
 const login = async () => {
   render(<App />);
   fireEvent.click(await screen.findByRole("button", { name: "Log in" }));
-  await screen.findByText(/Welcome, Asha/);
+  await screen.findByText(/Hey Asha/);
 };
 
 const openGroup = async () => {
   fireEvent.click(await screen.findByRole("button", { name: /Goa Trip/ }));
-  await screen.findByRole("button", { name: "balances" });
+  await screen.findByRole("button", { name: "Balances" });
 };
 
 afterEach(() => {
@@ -136,17 +137,17 @@ describe("authentication screens", () => {
 
   it("switches to the registration form and posts the new account", async () => {
     render(<App />);
-    fireEvent.click(screen.getByRole("button", { name: /Register/ }));
-    fireEvent.change(screen.getByLabelText("Name"), {
+    fireEvent.click(screen.getByRole("button", { name: "Create account" }));
+    fireEvent.change(screen.getByLabelText("Full Name"), {
       target: { value: "Asha" },
     });
-    fireEvent.change(screen.getByLabelText("Email"), {
+    fireEvent.change(screen.getByLabelText("Email address"), {
       target: { value: "new@demo.local" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
       target: { value: "Secret@123" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Register" }));
+    fireEvent.click(screen.getByRole("button", { name: "Sign Up" }));
     await waitFor(() => expect(calls.post.length).toBe(1));
     expect(calls.post[0]).toEqual([
       "/auth/register",
@@ -336,14 +337,14 @@ describe("balances and settlement", () => {
 
   it("shows the dashboard totals for the signed-in user", async () => {
     await login();
-    expect(await screen.findByText("You owe")).toBeTruthy();
+    expect(await screen.findByText("Owed by you")).toBeTruthy();
     expect(screen.getByText("₹50.00")).toBeTruthy();
   });
 
   it("renders settlement suggestions with member names, not ids", async () => {
     await login();
     await openGroup();
-    fireEvent.click(await screen.findByRole("button", { name: "balances" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Balances" }));
     expect(await screen.findByText(/Asha pays Bilal/)).toBeTruthy();
     expect(screen.queryByText(/1 pays 2/)).toBeNull();
   });
@@ -351,7 +352,7 @@ describe("balances and settlement", () => {
   it("records a settlement and refreshes group data", async () => {
     await login();
     await openGroup();
-    fireEvent.click(await screen.findByRole("button", { name: "balances" }));
+    fireEvent.click(await screen.findByRole("button", { name: "Balances" }));
     const amount = await screen.findByLabelText("Amount (₹)");
     fireEvent.change(amount, { target: { value: "50" } });
     fireEvent.click(screen.getByRole("button", { name: "Record" }));
