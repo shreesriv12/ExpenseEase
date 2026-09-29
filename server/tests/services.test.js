@@ -312,6 +312,64 @@ describe("balances from records", () => {
     expect(computeBalances(members, [], [])).toEqual({ 1: 0, 2: 0, 3: 0 }));
 });
 
+describe("debt simplification", () => {
+  const apply = (net, transfers) => {
+    const remaining = { ...net };
+    for (const t of transfers) {
+      remaining[t.from] += t.amount;
+      remaining[t.to] -= t.amount;
+    }
+    return remaining;
+  };
+
+  it("returns no transfers when everyone is settled up", () =>
+    expect(simplifyDebts({ 1: 0, 2: 0, 3: 0 })).toEqual([]));
+
+  it("emits a single transfer for one debtor and one creditor", () =>
+    expect(simplifyDebts({ 1: -120, 2: 120 })).toEqual([
+      { from: 1, to: 2, amount: 120 },
+    ]));
+
+  it("settles three debtors against one creditor in n-1 transfers", () =>
+    expect(simplifyDebts({ 1: -30, 2: -30, 3: -40, 4: 100 })).toEqual([
+      { from: 3, to: 4, amount: 40 },
+      { from: 1, to: 4, amount: 30 },
+      { from: 2, to: 4, amount: 30 },
+    ]));
+
+  it("settles one debtor against three creditors in n-1 transfers", () =>
+    expect(simplifyDebts({ 1: -100, 2: 40, 3: 30, 4: 30 })).toEqual([
+      { from: 1, to: 2, amount: 40 },
+      { from: 1, to: 3, amount: 30 },
+      { from: 1, to: 4, amount: 30 },
+    ]));
+
+  it("breaks equal amounts in favour of the lower user id", () =>
+    expect(simplifyDebts({ 1: -50, 2: -50, 3: 50, 4: 50 })).toEqual([
+      { from: 1, to: 3, amount: 50 },
+      { from: 2, to: 4, amount: 50 },
+    ]));
+
+  it("returns the same transfers for the same balances every time", () => {
+    const net = { 1: -50, 2: -50, 3: 100 };
+    expect(simplifyDebts(net)).toEqual(simplifyDebts(net));
+    expect(simplifyDebts({ 3: 100, 1: -50, 2: -50 })).toEqual(
+      simplifyDebts(net),
+    );
+  });
+
+  it("never emits more than n-1 transfers", () => {
+    const net = { 1: -25, 2: -25, 3: -25, 4: 25, 5: 25, 6: 25 };
+    expect(simplifyDebts(net).length).toBeLessThanOrEqual(5);
+  });
+
+  it("produces transfers that clear every net balance", () => {
+    const net = { 1: -300, 2: -100, 3: 50, 4: 200, 5: 150 };
+    const remaining = apply(net, simplifyDebts(net));
+    expect(Object.values(remaining)).toEqual([0, 0, 0, 0, 0]);
+  });
+});
+
 describe("debts and balances", () => {
   it("is deterministic and settles in n-1 transactions", () =>
     expect(simplifyDebts({ 1: -50, 2: -50, 3: 100 })).toEqual([
