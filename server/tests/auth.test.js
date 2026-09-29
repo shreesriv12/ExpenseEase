@@ -1,0 +1,1 @@
+import {describe,it,expect} from 'vitest';import request from 'supertest';import {app} from '../src/app.js';describe('health',()=>it('responds',async()=>expect((await request(app).get('/api/health')).body.ok).toBe(true)));
