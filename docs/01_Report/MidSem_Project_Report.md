@@ -3,14 +3,14 @@
 ## 1. Cover page
 
 **Project:** ExpenseEase  
-**Group number:** <<FILL: group number>>  
-**Members and registration numbers:** <<FILL: members>>  
-**Course and section:** <<FILL: course and section>>  
-**Supervisor/instructor:** <<FILL: instructor>>
+**Group number:** Pending team confirmation  
+**Members and registration numbers:** Pending confirmation  
+**Course and section:** Pending confirmation  
+**Supervisor/instructor:** Pending confirmation
 
 ## 2. Problem statement and motivation
 
-Friends, roommates, and trip groups often use chat messages or spreadsheets to track shared spending. This causes forgotten IOUs, unclear payers, unequal splits, and circular debts. ExpenseEase provides an auditable local web application to record group expenses, compute exact balances, and recommend a smaller set of repayments.
+Friends, roommates, and trip groups often use chat messages or spreadsheets to track shared spending. This causes forgotten IOUs, unclear payers, unequal splits, and circular debts. ExpenseEase provides a local web application to record group expenses, compute exact balances, and recommend a smaller set of repayments.
 
 ## 3. Project objectives
 
@@ -18,11 +18,11 @@ Friends, roommates, and trip groups often use chat messages or spreadsheets to t
 2. Preserve monetary accuracy using integer paise.
 3. Compute net balances and simplified debt transfers.
 4. Protect group data with authentication and authorization.
-5. Maintain an explainable, tested codebase.
+5. Maintain an explainable, testable codebase.
 
 ## 4. Scope
 
-Included scope is authentication, group membership, expenses, balances, settlements, activity, and dashboard summaries. Current implementation includes backend endpoints and a frontend demo flow for login, group browsing, equal expense entry, balances, and activity. Payment processing, OCR, multi-currency, social login, notifications, native apps, and recurring expenses are excluded. The application uses INR, English UI, local SQLite, and manually recorded settlements.
+Included scope is authentication, group membership, expenses, balances, settlements, activity, and dashboard summaries. The current implementation includes backend services and a frontend demo flow for login, group browsing, equal expense entry, balances, and activity. Payment processing, OCR, multi-currency support, social login, notifications, native apps, and recurring expenses remain out of scope. The application uses INR, local SQLite, and manually recorded settlements.
 
 ## 5. Stakeholders
 
@@ -36,22 +36,22 @@ Included scope is authentication, group membership, expenses, balances, settleme
 
 ## 6. Requirements specification
 
-Functional requirements cover registration, group creation, member addition, expense CRUD, split validation, balance calculation, debt simplification, settlement recording, activity, and dashboard summaries. Non-functional requirements include bcrypt password hashing, JWT expiry, validated input, SQLite portability, accessible labels, and balance-sum-zero invariants.
+Functional requirements cover registration, group creation, member addition, expense CRUD, split validation, balance calculation, debt simplification, settlement recording, activity, and dashboard summaries. Non-functional requirements include bcrypt password hashing, JWT-based authentication, validated input, SQLite portability, and balance invariants.
 
 ## 7. Requirements model
 
-The detailed use-case diagram, six use cases, and eighteen user stories are in the requirements document. Core acceptance requirement: submitted expense shares must total exactly to the stored paise amount, and only group members can access a group.
+The detailed use-case diagram, six use cases, and eighteen user stories are in the requirements document. The core acceptance condition remains that submitted expense shares must total exactly to the stored paise amount and that only group members can access a group.
 
 ## 8. System design
 
-The browser SPA calls an Express REST API. Routes delegate to controllers and services; Prisma accesses SQLite. The debt simplifier is a pure service, independent of database access. Balances are computed from expenses and settlements rather than stored, preventing stale records.
+The browser SPA calls an Express REST API. Routes delegate to controllers and services; Prisma accesses SQLite. The debt simplifier is a pure service, separated from database access. Balances are computed from expenses and settlements rather than stored, preventing stale records.
 
 ## 9. Technology stack and justification
 
 | Layer      | Choice            | Why                                   |
 | ---------- | ----------------- | ------------------------------------- |
 | Frontend   | React/Vite/Axios  | Fast local SPA and API integration    |
-| Backend    | Node.js/Express   | Small, familiar REST service          |
+| Backend    | Node.js/Express   | Small REST service with clear routes  |
 | Validation | Zod               | Declarative input contracts           |
 | Database   | SQLite/Prisma     | Zero-setup relational model           |
 | Security   | bcrypt/JWT/helmet | Password hashing and protected routes |
@@ -59,31 +59,34 @@ The browser SPA calls an Express REST API. Routes delegate to controllers and se
 
 ## 10. Implementation progress
 
-Completed backend capabilities: auth, groups, member authorization, expense CRUD, deterministic split calculators, balance calculation, simplification, settlement recording, activity, dashboard, seed data, and unit/service tests. Current frontend implements a live login-to-group-to-equal-expense-to-balance workflow. Exact/percentage split UI, settlement UI, broader test coverage, and polished responsive screens remain in progress.
+Verified backend capabilities in the current repository include authentication, group membership and authorization, expense CRUD, deterministic split validation, balance calculation, debt simplification, settlement support, activity, dashboard summaries, seed data, and service-level tests. The current frontend implements a live login-to-group-to-equal-expense-to-balance workflow.
 
-Screenshots to capture from a real run: login_demo.png, groups_dashboard.png, group_expenses_empty.png, add_equal_expense.png, expenses_after_add.png, balances_suggestions.png, activity_feed.png, and test_results.png.
+Verified status of remaining UI functionality: exact-split and percentage-split input flows, settlement UI, and broader interface coverage remain pending and are not claimed as complete.
 
 ## 11. Testing performed
 
-The current real automated run includes 13 backend tests and 1 frontend test, with lint and production build passing. Covered evidence includes equal remainder handling, invalid exact splits, percentage rounding, deterministic debt suggestions, balance invariants, health response, group authorization, expense edit/delete authorization, and persisted balance display. No unexecuted scenario is marked as passed.
+The current repository-level test run is not fully passing. Running `npm test` from the project root produced 4 passing suites and 1 failing auth suite. The failure is from `tests/auth.test.js` because `@prisma/client` was not initialized; the error states that Prisma client generation is required before the auth tests can run successfully.
+
+This means the current evidence must be reported accurately: the split, balance, group, and expense service logic is passing in the available automated checks, while auth integration remains a verified outstanding issue.
 
 ## 12. Project-management status
 
-The Gantt plan and risk register are in the project-management documents. Backend core services are ahead of frontend completeness; remaining risk is documentation, evidence, full UI coverage, packaging, and team-provided contribution records.
+The project-management documents in this repository contain the live status and discovered risks. The Git history confirms implemented work in backend services and the equal-split frontend flow. Final packaging, evidence verification, and contribution confirmation remain pending.
 
 ## 13. Individual contribution table
 
 | Member         | Tasks done | Modules / commits | Percentage |
 | -------------- | ---------- | ----------------- | ---------- |
-| <<FILL: name>> | <<FILL>>   | <<FILL>>          | <<FILL>>   |
+| Member 1       | Pending confirmation | Git history shows implementation work, but specific individual allocation is not yet verified | Pending |
+| Member 2       | Pending confirmation | Git history shows implementation work, but specific individual allocation is not yet verified | Pending |
 
 ## 14. Challenges faced and solutions attempted
 
-The project addressed deterministic rounding by allocating leftover paise in ascending user-id order. Simplification matches largest creditor and debtor deterministically. Authorization is enforced through membership and creator/admin checks. Balance consistency is maintained by calculating from records, not caching balances. <<CONFIRM: add only genuine team challenges>>
+The project addressed deterministic rounding by allocating leftover paise in ascending user-id order. Simplification matches the largest creditor and debtor deterministically. Authorization is enforced through membership and creator/admin checks. Balance consistency is maintained by calculating from records rather than storing a cached balance. The current project also highlights the need to stabilize Prisma client generation before final authentication testing can be considered complete.
 
 ## 15. Remaining-semester work
 
-Complete exact/percentage expense UI and settlement UI, expand API and frontend tests, add screenshots and test evidence, generate migration evidence, improve accessibility and responsiveness, conduct usability testing, and prepare the verified submission package.
+Complete exact/percentage expense UI and settlement UI, resolve Prisma client initialization for auth tests, expand API and frontend tests, add screenshots and verified test evidence, generate migration evidence, improve accessibility and responsiveness, and prepare the final submission package.
 
 ## 16. References
 
