@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterAll } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import request from "supertest";
 import jwt from "jsonwebtoken";
 import { app } from "../../src/app.js";
@@ -12,8 +12,6 @@ const credentials = {
 };
 
 beforeEach(resetDatabase);
-afterAll(() => prisma.$disconnect());
-
 describe("POST /api/auth/register", () => {
   it("creates a user and returns a token", async () => {
     const response = await request(app)
