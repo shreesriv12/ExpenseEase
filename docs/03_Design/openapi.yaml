@@ -1,0 +1,18 @@
+openapi: 3.0.3
+info: {title: ExpenseEase API, version: 0.1.0}
+servers: [{url: http://localhost:3001/api}]
+paths:
+  /auth/login:
+    post: {summary: Login, requestBody: {required: true}, responses: {'200': {description: Token and user}, '401': {description: Invalid credentials}}}
+  /groups:
+    get: {summary: List my groups, responses: {'200': {description: Groups}}}
+    post: {summary: Create group, responses: {'201': {description: Group}}}
+  /groups/{id}/expenses:
+    get: {summary: List expenses, responses: {'200': {description: Expenses}}}
+    post: {summary: Add expense, responses: {'201': {description: Expense}}}
+  /groups/{id}/balances:
+    get: {summary: Net balances and simplified transfers, responses: {'200': {description: Balances}}}
+  /groups/{id}/settlements:
+    post: {summary: Record settlement, responses: {'201': {description: Settlement}}}
+  /dashboard/summary:
+    get: {summary: Current user aggregate totals, responses: {'200': {description: Summary}}}
