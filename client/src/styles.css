@@ -4,7 +4,7 @@
   background: #f5f7fb;
 }
 main {
-  max-width: 800px;
+  max-width: 900px;
   margin: 3rem auto;
   padding: 2rem;
   background: white;
@@ -16,6 +16,7 @@ header {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #ddd;
+  gap: 1rem;
 }
 h1 {
   color: #2556b8;
@@ -23,7 +24,7 @@ h1 {
 form {
   display: grid;
   gap: 1rem;
-  max-width: 600px;
+  max-width: 700px;
 }
 label {
   display: grid;
@@ -49,6 +50,7 @@ nav {
   gap: 0.5rem;
   border-bottom: 1px solid #ddd;
   margin: 1rem 0;
+  flex-wrap: wrap;
 }
 nav button {
   background: #e8eefb;
@@ -71,8 +73,26 @@ li {
   text-align: left;
 }
 .inline {
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   align-items: end;
+}
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.summary-grid div {
+  background: #f3f7ff;
+  border: 1px solid #dfe8ff;
+  border-radius: 12px;
+  padding: 1rem;
+}
+.member-splits {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
 }
 .error,
 .negative {
