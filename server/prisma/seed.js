@@ -1,0 +1,12 @@
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+const prisma=new PrismaClient();
+const passwordHash=await bcrypt.hash('Demo@1234',10);
+await prisma.activity.deleteMany();await prisma.settlement.deleteMany();await prisma.expenseSplit.deleteMany();await prisma.expense.deleteMany();await prisma.groupMember.deleteMany();await prisma.group.deleteMany();await prisma.user.deleteMany();
+const users=await Promise.all(['Asha','Bharat','Chitra','Dev'].map((name,index)=>prisma.user.create({data:{name,email:name.toLowerCase()+'@demo.local',passwordHash}})));
+const trip=await prisma.group.create({data:{name:'Goa Weekend',description:'Demo trip expenses',createdById:users[0].id,members:{create:users.map((user,index)=>({userId:user.id,role:index===0?'ADMIN':'MEMBER'}))}}});
+await prisma.expense.create({data:{groupId:trip.id,description:'Hotel',amountPaise:120000,category:'Stay',date:new Date('2026-09-01T00:00:00.000Z'),paidById:users[0].id,createdById:users[0].id,splitType:'EQUAL',splits:{create:users.map(user=>({userId:user.id,sharePaise:30000}))}}});
+await prisma.settlement.create({data:{groupId:trip.id,fromUserId:users[1].id,toUserId:users[0].id,amountPaise:10000,note:'Partial hotel repayment'}});
+await prisma.activity.create({data:{groupId:trip.id,actorId:users[0].id,type:'SEED_CREATED',message:'Demo data created'}});
+console.info('Seeded demo users: asha@demo.local through dev@demo.local; password Demo@1234');
+await prisma.$disconnect();
