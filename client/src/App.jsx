@@ -174,7 +174,11 @@ function CreateGroup({ onCreated }) {
         </label>
         <button>Create</button>
       </form>
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
     </section>
   );
 }
@@ -207,7 +211,11 @@ function AddMember({ group, onDone }) {
         </label>
         <button>Add</button>
       </form>
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
     </section>
   );
 }
@@ -553,7 +561,11 @@ function RecordSettlement({ group, onDone }) {
         </label>
         <button>Record</button>
       </form>
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
     </section>
   );
 }
@@ -565,6 +577,7 @@ function GroupDetail({ group, currentUserId, onBack }) {
   const [activity, setActivity] = useState([]);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const myRole = group.members.find(
     (member) => member.user.id === currentUserId,
@@ -588,6 +601,7 @@ function GroupDetail({ group, currentUserId, onBack }) {
   };
 
   const refresh = async () => {
+    setLoading(true);
     try {
       const [list, balance, feed] = await Promise.all([
         api.get("/groups/" + group.id + "/expenses"),
@@ -599,6 +613,8 @@ function GroupDetail({ group, currentUserId, onBack }) {
       setActivity(feed.data.activity);
     } catch (err) {
       setError(errorText(err));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -633,6 +649,7 @@ function GroupDetail({ group, currentUserId, onBack }) {
           <button
             className={tab === name ? "active" : ""}
             key={name}
+            aria-current={tab === name ? "page" : undefined}
             onClick={() => setTab(name)}
           >
             {name}
@@ -640,14 +657,20 @@ function GroupDetail({ group, currentUserId, onBack }) {
         ))}
       </nav>
 
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
 
       {tab === "expenses" && (
         <>
           <AddExpense group={group} onDone={refresh} />
           <section>
             <h2>Expenses</h2>
-            {expenses.length ? (
+            {loading ? (
+              <p>Loading expenses…</p>
+            ) : expenses.length ? (
               <ul>
                 {expenses.map((item) => (
                   <li key={item.id}>
@@ -703,27 +726,35 @@ function GroupDetail({ group, currentUserId, onBack }) {
       {tab === "balances" && (
         <section>
           <h2>Balances</h2>
-          {balances?.members.map((member) => (
-            <p key={member.user.id}>
-              {member.user.name}: {" "}
-              <strong
-                className={member.netPaise >= 0 ? "positive" : "negative"}
-              >
-                {formatMoney(member.netPaise)}
-              </strong>
-            </p>
-          ))}
-
-          <h3>Suggested settlements</h3>
-          {balances?.simplifiedSettlements.length ? (
-            balances.simplifiedSettlements.map((item, index) => (
-              <p key={index}>
-                {nameOf(item.from)} pays {nameOf(item.to)}{" "}
-                {formatMoney(item.amount)}
-              </p>
-            ))
+          {loading ? (
+            <p>Loading balances…</p>
           ) : (
-            <p>Everyone is settled up.</p>
+            <>
+              {balances?.members.map((member) => (
+                <p key={member.user.id}>
+                  {member.user.name}:{" "}
+                  <strong
+                    className={
+                      member.netPaise >= 0 ? "positive" : "negative"
+                    }
+                  >
+                    {formatMoney(member.netPaise)}
+                  </strong>
+                </p>
+              ))}
+
+              <h3>Suggested settlements</h3>
+              {balances?.simplifiedSettlements.length ? (
+                balances.simplifiedSettlements.map((item, index) => (
+                  <p key={index}>
+                    {nameOf(item.from)} pays {nameOf(item.to)}{" "}
+                    {formatMoney(item.amount)}
+                  </p>
+                ))
+              ) : (
+                <p>Everyone is settled up.</p>
+              )}
+            </>
           )}
 
           <RecordSettlement group={group} onDone={refresh} />
@@ -733,7 +764,9 @@ function GroupDetail({ group, currentUserId, onBack }) {
       {tab === "activity" && (
         <section>
           <h2>Activity</h2>
-          {activity.length ? (
+          {loading ? (
+            <p>Loading activity…</p>
+          ) : activity.length ? (
             activity.map((item) => <p key={item.id}>{item.message}</p>)
           ) : (
             <p>No activity yet.</p>
@@ -751,13 +784,17 @@ export default function App() {
   const [error, setError] = useState("");
   const [dashboardSummary, setDashboardSummary] = useState(null);
   const [authMode, setAuthMode] = useState("login");
+  const [loadingGroups, setLoadingGroups] = useState(false);
 
   const load = async () => {
+    setLoadingGroups(true);
     try {
       const result = await api.get("/groups");
       setGroups(result.data.groups);
     } catch (err) {
       setError(errorText(err));
+    } finally {
+      setLoadingGroups(false);
     }
   };
 
@@ -825,7 +862,11 @@ export default function App() {
 
       <h2>Welcome, {user.name}</h2>
       <DashboardSummary summary={dashboardSummary} />
-      {error && <p className="error">{error}</p>}
+      {error && (
+        <p className="error" role="alert">
+          {error}
+        </p>
+      )}
 
       <CreateGroup
         onCreated={(group) => {
@@ -837,7 +878,9 @@ export default function App() {
 
       <section>
         <h2>Your groups</h2>
-        {groups.length ? (
+        {loadingGroups ? (
+          <p>Loading groups…</p>
+        ) : groups.length ? (
           <ul>
             {groups.map((group) => (
               <li key={group.id}>
