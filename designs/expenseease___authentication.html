@@ -79,9 +79,9 @@
 <span class="material-symbols-outlined text-[18px] text-primary flex-shrink-0 mt-0.5">key</span>
 <div class="flex flex-col w-full text-left">
 <div class="flex items-center justify-between">
-<span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-primary">Demo Credentials</span>
-<button class="font-label-sm text-label-sm text-secondary hover:underline" onclick="fillDemoCredentials()" type="button">
-            Auto-fill
+<span class="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-primary">Create an account</span>
+<button class="font-label-sm text-label-sm text-secondary hover:underline" onclick="switchAuthMode('register')" type="button">
+            Register
           </button>
 </div>
 <p class="font-body-sm text-body-sm mt-0.5 select-all">
@@ -146,13 +146,6 @@
     }
   }
 
-  function fillDemoCredentials() {
-    switchAuthMode('login');
-    document.getElementById('email').value = 'rahul@demo.in';
-    document.getElementById('password').value = 'password123';
-    document.getElementById('auth-error-box').classList.add('hidden');
-  }
-
   function triggerForgotPassword() {
     const email = document.getElementById('email').value.trim();
     if (!email) {
@@ -170,9 +163,9 @@
     const errorBox = document.getElementById('auth-error-box');
 
     if (currentMode === 'login') {
-      if (email === 'rahul@demo.in' && password === 'password123') {
+      if (email && password) {
         errorBox.classList.add('hidden');
-        alert('Welcome back, Rahul! Successfully authenticated.');
+        alert('Authentication is handled by the ExpenseEase API in the live application.');
       } else {
         errorBox.classList.remove('hidden');
       }

@@ -61,7 +61,7 @@ const memberGroup = {
     { role: "ADMIN", user: { id: 2, name: "Bilal" } },
   ],
 };
-const user = { id: 1, name: "Asha", email: "asha@demo.local" };
+const user = { id: 1, name: "Asha", email: "asha@example.com" };
 
 const expense = (overrides = {}) => ({
   id: 100,
@@ -107,6 +107,12 @@ const groupRoutes = (list = [expense()], g = group) => ({
 
 const login = async () => {
   render(<App />);
+  fireEvent.change(screen.getByLabelText("Email address"), {
+    target: { value: user.email },
+  });
+  fireEvent.change(screen.getByLabelText("Password"), {
+    target: { value: "password123" },
+  });
   fireEvent.click(await screen.findByRole("button", { name: "Log in" }));
   await screen.findByText(/Hey Asha/);
 };
@@ -126,8 +132,14 @@ afterEach(() => {
 describe("authentication screens", () => {
   beforeEach(() => configure(groupRoutes()));
 
-  it("logs in with the demo credentials and stores the token", async () => {
+  it("logs in and stores the token", async () => {
     render(<App />);
+    fireEvent.change(screen.getByLabelText("Email address"), {
+      target: { value: user.email },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "password123" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Log in" }));
     await waitFor(() =>
       expect(localStorage.getItem("expenseEaseToken")).toBe("t"),
@@ -142,7 +154,7 @@ describe("authentication screens", () => {
       target: { value: "Asha" },
     });
     fireEvent.change(screen.getByLabelText("Email address"), {
-      target: { value: "new@demo.local" },
+      target: { value: "new@example.com" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
       target: { value: "Secret@123" },
@@ -151,7 +163,7 @@ describe("authentication screens", () => {
     await waitFor(() => expect(calls.post.length).toBe(1));
     expect(calls.post[0]).toEqual([
       "/auth/register",
-      { name: "Asha", email: "new@demo.local", password: "Secret@123" },
+      { name: "Asha", email: "new@example.com", password: "Secret@123" },
     ]);
   });
 
@@ -165,6 +177,12 @@ describe("authentication screens", () => {
       }),
     );
     render(<App />);
+    fireEvent.change(screen.getByLabelText("Email address"), {
+      target: { value: user.email },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "incorrect-password" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Log in" }));
     const alert = await screen.findByRole("alert");
     expect(alert.textContent).toContain("Invalid email or password");

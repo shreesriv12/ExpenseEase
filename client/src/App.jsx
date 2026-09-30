@@ -158,7 +158,7 @@ function Login({ onLogin, onSwitch }) {
         <div>
           <label className="block font-label-lg text-label-lg text-on-surface mb-1.5" htmlFor="email">Email address</label>
           <div className="relative">
-            <input name="email" type="email" id="email" defaultValue="asha@demo.local" required className="w-full h-11 px-3.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline shadow-sm transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="rahul@collegemail.edu" />
+            <input name="email" type="email" id="email" required className="w-full h-11 px-3.5 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline shadow-sm transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="you@example.com" />
           </div>
         </div>
         <div>
@@ -176,8 +176,8 @@ function Login({ onLogin, onSwitch }) {
           {showResetHelp && (
             <div className="mb-2.5 rounded-lg border border-outline-variant bg-surface-container-low p-3 text-body-sm text-body-sm text-on-surface-variant space-y-2">
               <p>
-                Password resets are handled by your workspace admin, so there is no reset link to
-                email you. Sign in with a demo account, or create a new one if you are new here.
+                Password reset is not available yet. Create an account if you are new here, or
+                contact your administrator if you cannot access an existing account.
               </p>
               <button
                 type="button"
@@ -189,7 +189,7 @@ function Login({ onLogin, onSwitch }) {
             </div>
           )}
           <div className="relative flex items-center">
-            <input name="password" id="password" type={showPassword ? "text" : "password"} defaultValue="Demo@1234" required className="w-full h-11 pl-3.5 pr-11 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline shadow-sm transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="••••••••••••" />
+            <input name="password" id="password" type={showPassword ? "text" : "password"} required className="w-full h-11 pl-3.5 pr-11 rounded-lg bg-surface-container-lowest text-on-surface font-body-md text-body-md placeholder:text-outline shadow-sm transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Enter your password" />
             <button aria-label={showPassword ? "Hide password" : "Show password"} type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-0 top-0 bottom-0 px-3 flex items-center justify-center text-outline hover:text-on-surface transition-colors">
               <span aria-hidden="true" className="material-symbols-outlined text-[20px]">{showPassword ? "visibility_off" : "visibility"}</span>
             </button>
@@ -203,17 +203,6 @@ function Login({ onLogin, onSwitch }) {
         </div>
       </form>
       
-      <div className="mt-6 p-3.5 rounded-lg bg-surface-container-low text-on-surface-variant flex items-start gap-2.5">
-        <span aria-hidden="true" className="material-symbols-outlined text-[18px] text-primary flex-shrink-0 mt-0.5">key</span>
-        <div className="flex flex-col w-full text-left">
-          <div className="flex items-center justify-between">
-            <span className="font-label-sm text-label-sm font-semibold uppercase tracking-wider text-primary">Demo Credentials</span>
-          </div>
-          <p className="font-body-sm text-body-sm mt-0.5 select-all">
-            <span className="font-medium text-on-surface">Email:</span> asha@demo.local &nbsp;•&nbsp; <span className="font-medium text-on-surface">Password:</span> Demo@1234
-          </p>
-        </div>
-      </div>
     </AuthLayout>
   );
 }
@@ -454,7 +443,7 @@ function AddMember({ group, onDone }) {
               className={textInput}
               id="member-email"
               name="email"
-              placeholder="friend@demo.local"
+              placeholder="friend@example.com"
               required
               type="email"
             />

@@ -88,7 +88,7 @@ describe("LIVE: every button, real server", () => {
     assertAlive("after Create Group");
 
     // --- Add member button
-    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "bharat@demo.local" } });
+    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "bharat@example.com" } });
     fireEvent.click(screen.getByRole("button", { name: /^Add$/ }));
     await waitFor(
       () => expect(screen.getAllByText("Bharat").length).toBeGreaterThan(0),
