@@ -1,10 +1,10 @@
 # Submission Checklist
 
-- [ ] Fill group, student, course, section, and instructor details.
-- [ ] Confirm all <<FILL>> markers with genuine information.
-- [ ] Capture real UI and test-evidence screenshots.
+- [ ] Fill group number and section details.
+- [ ] Confirm remaining <<FILL>> markers with genuine task-allocation, contribution, and video-link information.
+- [x] Capture real UI and test-evidence screenshots (17 files in `submission/05_Testing/Test_Evidence`).
 - [ ] Export the report and artifact PDFs.
 - [ ] Verify the video link opens without requesting access.
-- [ ] Run lint, tests, build, seed, and secrets scan.
+- [x] Run Docker startup, lint, tests, build, and secrets scan.
 - [ ] Verify the ZIP opens and has the required name.
 - [ ] One group member uploads the final verified package.
