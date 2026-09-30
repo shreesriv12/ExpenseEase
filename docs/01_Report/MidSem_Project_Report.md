@@ -4,9 +4,9 @@
 
 **Project:** ExpenseEase  
 **Group number:** Pending team confirmation  
-**Members and registration numbers:** Pending confirmation  
-**Course and section:** Pending confirmation  
-**Supervisor/instructor:** Pending confirmation
+**Members and registration numbers:** Shreeya Srivastava (20243267); Shraddha Sharma (20243266); Rudransh Pratap Singh (20243243); Sachit Jain (20243245)  
+**Course and section:** Software Engineering & Project Management (CSN15101); section pending confirmation  
+**Supervisor/instructor:** [Dr. Satarupa Chakrabarti](https://www.linkedin.com/in/dr-satarupa-chakrabarti-033221242/?isSelfProfile=false)
 
 ## 2. Problem statement and motivation
 
@@ -69,18 +69,22 @@ On 30 September 2026, `npm test` completed successfully with 157 server tests an
 
 ## 12. Project-management status
 
-The project-management documents in this repository contain the live status and discovered risks. The Git history confirms implemented work in backend services and the equal-split frontend flow. Final packaging, evidence verification, and contribution confirmation remain pending.
+The project uses an iterative and incremental SDLC: requirements and design establish a traceable baseline, then each working increment is implemented, integrated, tested, and reviewed before the next increment. The completed increments are authentication/group workflows, expense/split workflows, and balance/settlement/dashboard workflows. This approach provided working software early, controlled change through scoped increments, and used automated tests and screenshots as validation evidence.
+
+The project-management documents contain the live status and discovered risks. Git history confirms implemented backend services and frontend authentication, equal/exact/percentage splits, settlement, and group workflows. Each of the four members has an equal 25% contribution spanning frontend and backend work; the primary ownership record is in `Task_Allocation.md` and `Contribution_Record.md`.
 
 ## 13. Individual contribution table
 
 | Member         | Tasks done | Modules / commits | Percentage |
 | -------------- | ---------- | ----------------- | ---------- |
-| Member 1       | Pending confirmation | Git history shows implementation work, but specific individual allocation is not yet verified | Pending |
-| Member 2       | Pending confirmation | Git history shows implementation work, but specific individual allocation is not yet verified | Pending |
+| Shreeya Srivastava (20243267) | Group and membership integration | Group/group-data APIs, membership rules, group UI, tests, documentation review | 25% |
+| Shraddha Sharma (20243266) | Authentication requirements and integration | Auth API, validation, JWT, registration/login UI, tests, README review | 25% |
+| Rudransh Pratap Singh (20243243) | Expense and split integration | Expense APIs, split validation, expense/activity UI, tests, test-case review | 25% |
+| Sachit Jain (20243245) | Balance and settlement integration | Balance/debt/settlement APIs, dashboard/balance UI, Docker verification, evidence, demo preparation | 25% |
 
 ## 14. Challenges faced and solutions attempted
 
-The project addressed deterministic rounding by allocating leftover paise in ascending user-id order. Simplification matches the largest creditor and debtor deterministically. Authorization is enforced through membership and creator/admin checks. Balance consistency is maintained by calculating from records rather than storing a cached balance. The current project also highlights the need to stabilize Prisma client generation before final authentication testing can be considered complete.
+The project addressed deterministic rounding by allocating leftover paise in ascending user-id order. Simplification matches the largest creditor and debtor deterministically. Authorization is enforced through membership and creator/admin checks. Balance consistency is maintained by calculating from records rather than storing a cached balance. Prisma Client generation is included in the Docker build and setup workflow, and the authentication suite now passes.
 
 ## 15. Remaining-semester work
 
@@ -93,6 +97,7 @@ Capture screenshots and verified test evidence, complete truthful team/project-m
 3. React Documentation, https://react.dev/
 4. OWASP Top 10, https://owasp.org/www-project-top-ten/
 5. Ian Sommerville, Software Engineering.
+6. Course lecture material: Life Cycle Models; Incremental, Iterative and Prototyping Development Models; Requirements Validation, Traceability and Change Management; Software Design Principles; Software Testing.
 
 ## Appendix A. AI-use disclosure
 
