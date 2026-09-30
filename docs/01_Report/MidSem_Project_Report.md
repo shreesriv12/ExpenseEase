@@ -261,32 +261,71 @@ The project follows an **iterative and incremental SDLC**. Each increment delive
    - Settlement recording and activity logs.
    - Dashboard summaries for cross-group balances.
 
-## 13. Individual contribution table
+### 10.3 Team Contributions
 
-| Member         | Tasks done | Modules / commits | Percentage |
-| -------------- | ---------- | ----------------- | ---------- |
-| Shreeya Srivastava (20243267) | Group and membership integration | Group/group-data APIs, membership rules, group UI, tests, documentation review | 25% |
-| Shraddha Sharma (20243266) | Authentication requirements and integration | Auth API, validation, JWT, registration/login UI, tests, README review | 25% |
-| Rudransh Pratap Singh (20243243) | Expense and split integration | Expense APIs, split validation, expense/activity UI, tests, test-case review | 25% |
-| Sachit Jain (20243245) | Balance and settlement integration | Balance/debt/settlement APIs, dashboard/balance UI, Docker verification, evidence, demo preparation | 25% |
+| Member               | Tasks Completed                                                                 | Contribution |
+|----------------------|---------------------------------------------------------------------------------|--------------|
+| Shreeya Srivastava   | Group and membership integration, group UI, tests, documentation review         | 25%          |
+| Shraddha Sharma      | Authentication API, JWT integration, registration/login UI, tests, README review | 25%          |
+| Rudransh Pratap Singh| Expense APIs, split validation, expense/activity UI, tests, test-case review    | 25%          |
+| Sachit Jain          | Balance/debt/settlement APIs, dashboard/balance UI, Docker verification, demo preparation | 25%          |
 
-## 14. Challenges faced and solutions attempted
+### 10.4 Risks and Mitigation
 
-The project addressed deterministic rounding by allocating leftover paise in ascending user-id order. Simplification matches the largest creditor and debtor deterministically. Authorization is enforced through membership and creator/admin checks. Balance consistency is maintained by calculating from records rather than storing a cached balance. Prisma Client generation is included in the Docker build and setup workflow, and the authentication suite now passes.
+| Risk                          | Mitigation Strategy                                                   |
+|-------------------------------|-----------------------------------------------------------------------|
+| Incorrect balance calculations| Automated tests ensure accuracy; balances are dynamically computed.  |
+| Unauthorized access           | Role-based access control and JWT authentication are enforced.       |
+| Deployment issues             | Dockerized setup ensures consistency across environments.            |
 
-## 15. Remaining-semester work
+---
 
-Capture screenshots and verified test evidence, complete truthful team/project-management details, record and publish the demo video, export required PDFs, improve accessibility and responsiveness, and prepare the final submission package.
+## 11. Challenges Faced and Solutions Attempted
 
-## 16. References
+1. **Deterministic Rounding**:
+   - Challenge: Ensuring that leftover paise are distributed fairly in equal splits.
+   - Solution: Allocated leftover paise in ascending user ID order.
 
-1. Prisma Documentation, https://www.prisma.io/docs
-2. Express Documentation, https://expressjs.com/
-3. React Documentation, https://react.dev/
-4. OWASP Top 10, https://owasp.org/www-project-top-ten/
-5. Ian Sommerville, Software Engineering.
-6. Course lecture material: Life Cycle Models; Incremental, Iterative and Prototyping Development Models; Requirements Validation, Traceability and Change Management; Software Design Principles; Software Testing.
+2. **Debt Simplification**:
+   - Challenge: Reducing the number of transactions required to settle debts.
+   - Solution: Implemented a greedy algorithm that matches the largest creditor and debtor.
 
-## Appendix A. AI-use disclosure
+3. **Authorization**:
+   - Challenge: Preventing unauthorized access to group data.
+   - Solution: Enforced membership and admin checks for all sensitive operations.
 
-See AI_USAGE_DISCLOSURE.md. Students must complete the verification/modification column honestly and remain responsible for correctness, security, and originality.
+4. **Balance Consistency**:
+   - Challenge: Avoiding stale or incorrect balance data.
+   - Solution: Calculated balances dynamically from expenses and settlements.
+
+---
+
+## 12. Remaining Work
+
+- Conduct a final round of usability testing with real users to identify and fix any UX issues.
+- Optimize the performance of the frontend and backend for faster load times and API responses.
+- Add a feature to export group expense summaries as a PDF for offline sharing.
+
+
+---
+
+## 13. References
+
+1. [Prisma Documentation](https://www.prisma.io/docs)  
+   - Used for database schema management and queries.
+2. [Express Documentation](https://expressjs.com/)  
+   - Used for building the backend REST API.
+3. [React Documentation](https://react.dev/)  
+   - Used for developing the frontend Single Page Application (SPA).
+4. Ian Sommerville, *Software Engineering*  
+   - Referenced for applying software engineering principles like SDLC and requirements validation.
+5. Course lecture material  
+   - Used for understanding life cycle models, requirements traceability, and software testing.
+
+---
+
+---
+
+## Appendix A. AI-Use Disclosure
+
+See `AI_USAGE_DISCLOSURE.md`. Students must verify and modify AI-generated content as needed and remain responsible for correctness, security, and originality.
