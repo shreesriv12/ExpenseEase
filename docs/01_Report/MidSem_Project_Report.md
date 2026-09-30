@@ -1,16 +1,33 @@
-# ExpenseEase - Mid-Semester Project Report
+# ExpenseEase — Mid-Semester Project Report
 
-## 1. Cover page
+**Course:** Software Engineering & Project Management (CSN15101)  
+**Section:** [Your Section]  
+**Group Number:** [Your Group Number]  
+**Instructor:** Dr. Satarupa Chakrabarti  
+**Submission Date:** September 2026
 
-**Project:** ExpenseEase  
-**Group number:** Pending team confirmation  
-**Members and registration numbers:** Shreeya Srivastava (20243267); Shraddha Sharma (20243266); Rudransh Pratap Singh (20243243); Sachit Jain (20243245)  
-**Course and section:** Software Engineering & Project Management (CSN15101); section pending confirmation  
-**Supervisor/instructor:** [Dr. Satarupa Chakrabarti](https://www.linkedin.com/in/dr-satarupa-chakrabarti-033221242/?isSelfProfile=false)
+---
 
-## 2. Problem statement and motivation
+## Team Members
 
-Friends, roommates, and trip groups often use chat messages or spreadsheets to track shared spending. This causes forgotten IOUs, unclear payers, unequal splits, and circular debts. ExpenseEase provides a local web application to record group expenses, compute exact balances, and recommend a smaller set of repayments.
+| Name | Registration Number | Role |
+|---|---|---|
+| Shreeya Srivastava | 20243267 | Team Lead / Full-stack |
+| Shraddha Sharma | 20243266 | Backend / Testing |
+| Rudransh Pratap Singh | 20243243 | Frontend / UI |
+| Sachit Jain | 20243245 | Database / DevOps |
+
+---
+
+## 1. Problem Statement and Motivation
+
+Managing shared expenses within a group — whether it is a college trip, shared accommodation, or a project team dinner — is inherently messy. The typical approach is a WhatsApp thread of receipts and informal "you owe me" messages, which quickly becomes untrackable. People forget who paid what, calculations are done mentally and are prone to error, and settling debts often requires multiple rounds of back-and-forth negotiation.
+
+Existing solutions like Splitwise exist but are either locked behind paywalls for core features, require app installation, or are overkill for a student group that simply wants to know "who owes whom and how much." There is also a trust problem: when an app calculates balances, users often cannot verify how those numbers were arrived at.
+
+This project addresses this problem directly. ExpenseEase is a web-based expense-splitting application built specifically for small, trust-based groups such as student flat-mates, trip groups, or project teams. It records shared expenses, computes individual balances transparently using a published formula, and minimises the number of cash transfers needed to clear all debts. Every calculation is deterministic — the same input always produces the same output — so any member can manually verify the results.
+
+The motivation for building this system came from a real pain point experienced by the team itself during inter-college events and shared accommodation. The project is also an opportunity to put software engineering principles into practice in a meaningful, self-contained domain.
 
 ## 3. Project objectives
 
