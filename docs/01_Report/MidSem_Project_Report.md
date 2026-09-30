@@ -97,38 +97,58 @@ The following were considered but deliberately excluded from the mid-semester de
 
 ---
 
-## 5. Stakeholders
+## 4. Stakeholders
 
-| Stakeholder       | Interest                         | Influence |
-| ----------------- | -------------------------------- | --------- |
-| Group member      | Accurate shared costs            | High      |
-| Group admin       | Membership and data oversight    | High      |
-| Course evaluator  | Evidence of engineering practice | High      |
-| Development team  | Deliverable quality and learning | High      |
-| Future maintainer | Clear design and tests           | Medium    |
+| Stakeholder          | Interest                          | Influence |
+|----------------------|------------------------------------|-----------|
+| Group members        | Accurate shared costs             | High      |
+| Group admins         | Membership and data oversight     | High      |
+| Course evaluator     | Evidence of engineering practice  | High      |
+| Development team     | Deliverable quality and learning  | High      |
+| Future maintainers   | Clear design and tests            | Medium    |
 
-## 6. Requirements specification
+---
 
-Functional requirements cover registration, group creation, member addition, expense CRUD, split validation, balance calculation, debt simplification, settlement recording, activity, and dashboard summaries. Non-functional requirements include bcrypt password hashing, JWT-based authentication, validated input, Dockerized PostgreSQL, and balance invariants.
+## 5. Requirements Specification
 
-## 7. Requirements model
+### Functional Requirements
 
-The detailed use-case diagram, six use cases, and eighteen user stories are in the requirements document. The core acceptance condition remains that submitted expense shares must total exactly to the stored paise amount and that only group members can access a group.
+- User registration and login.
+- Group creation and member addition.
+- Expense CRUD operations.
+- Split validation (equal, exact, percentage).
+- Balance calculation and debt simplification.
+- Settlement recording.
+- Activity log and dashboard summaries.
 
-## 8. System design
+### Non-Functional Requirements
 
-The browser SPA calls an Express REST API. Routes delegate to controllers and services; Prisma accesses PostgreSQL. The debt simplifier is a pure service, separated from database access. Balances are computed from expenses and settlements rather than stored, preventing stale records.
+- bcrypt password hashing.
+- JWT-based authentication.
+- Validated input.
+- Dockerized PostgreSQL.
+- Balance invariants.
 
-## 9. Technology stack and justification
+---
 
-| Layer      | Choice            | Why                                   |
-| ---------- | ----------------- | ------------------------------------- |
-| Frontend   | React/Vite/Axios  | Fast local SPA and API integration    |
-| Backend    | Node.js/Express   | Small REST service with clear routes  |
-| Validation | Zod               | Declarative input contracts           |
-| Database   | PostgreSQL/Prisma | Dockerized relational persistence     |
-| Security   | bcrypt/JWT/helmet | Password hashing and protected routes |
-| Tests      | Vitest/Supertest  | Fast unit and API-oriented testing    |
+## 6. System Design
+
+The system is a browser-based SPA (Single Page Application) that communicates with an Express REST API. The backend uses Prisma for database access, and balances are computed dynamically from expenses and settlements to prevent stale data.
+
+---
+
+## 7. Technology Stack
+
+| Layer       | Choice               | Justification                          |
+|-------------|----------------------|----------------------------------------|
+| Frontend    | React/Vite/Axios     | Fast SPA and API integration.          |
+| Backend     | Node.js/Express      | Small REST service with clear routes.  |
+| Validation  | Zod                  | Declarative input contracts.           |
+| Database    | PostgreSQL/Prisma    | Dockerized relational persistence.     |
+| Security    | bcrypt/JWT/helmet    | Password hashing and protected routes. |
+| Tests       | Vitest/Supertest     | Fast unit and API-oriented testing.    |
+
+---
 
 ## 10. Implementation progress
 
