@@ -34,7 +34,7 @@ ExpenseEase is a full-stack web application for recording shared expenses and ca
 | Security | bcrypt, JWT, Helmet |
 | Testing | Vitest, Supertest |
 | Deployment | Docker Compose |
-=======
+
 A web-based collaborative expense management system for groups. Members record shared expenses, split them in different ways, see who owes whom, and record settlements. All balance calculations are deterministic, so the same inputs always produce the same balances.
 
 > Course: Software Engineering and Project Management, MNNIT Allahabad
@@ -83,13 +83,10 @@ ExpenseEase/
 
 ---
 
-<<<<<<< HEAD
 The application intentionally starts with no demo accounts or expenses. Register users, create a group, and add registered members by email.
 
 ## Requirements for local development
-=======
 ## 4. Getting Started
->>>>>>> 42ad060ac1c9f5ad68516750a7c2d20c93cbab62
 
 ### Prerequisites
 - Node.js 20 or later
