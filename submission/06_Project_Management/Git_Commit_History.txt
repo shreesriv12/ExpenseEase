@@ -1,0 +1,17 @@
+Git commit history evidence (latest 15 commits)
+
+3bf0efe | 2026-09-30 | docs: update project setup for Docker PostgreSQL
+78c3c5d | 2026-09-30 | feat: remove demo accounts and require real user registration
+01ec07e | 2026-09-30 | fix: route frontend API requests through the application server
+85640e8 | 2026-09-30 | feat: serve the production frontend from Express
+264958b | 2026-09-30 | feat: add Docker Compose app and database services
+d95bf57 | 2026-09-30 | chore: add production Docker image configuration
+c053111 | 2026-09-30 | test: run server suite with isolated PostgreSQL database
+a68a78a | 2026-09-30 | feat: add PostgreSQL database migration
+2080b4d | 2026-09-30 | feat: configure Prisma for PostgreSQL
+412dbb5 | 2026-09-30 | chore: ignore local environment files
+46ffec9 | 2026-09-30 | test: cover screens with component tests and a live button sweep
+e109a33 | 2026-09-30 | fix: make every screen and control on the group page work
+17d5177 | 2026-09-30 | test: make the server suite runnable on Windows
+c0de76a | 2026-09-30 | fix: return the normal JSON envelope for auth rate limits
+bb527d1 | 2026-09-30 | fix: reject a token whose user no longer exists
