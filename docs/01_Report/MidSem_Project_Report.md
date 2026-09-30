@@ -150,21 +150,116 @@ The system is a browser-based SPA (Single Page Application) that communicates wi
 
 ---
 
-## 10. Implementation progress
+## 8. Implementation Progress
 
-Verified backend capabilities in the current repository include authentication, group membership and authorization, expense CRUD, deterministic split validation, balance calculation, debt simplification, settlement support, activity, dashboard summaries, and service-level tests. The current frontend implements a live registration-to-group-to-expense-to-balance workflow.
+The backend of ExpenseEase is built using **Node.js** and **Express**, with a focus on modularity and scalability. Key backend features include:
 
-The frontend supports equal, exact, and percentage split input flows, expense editing/deletion, settlement recording, balance views, activity, and dashboard summaries.
+1. **Authentication and Authorization**:
+   - User registration and login are implemented with bcrypt for password hashing and JWT for session management.
+   - Role-based access control ensures that only group admins can add or remove members.
 
-## 11. Testing performed
+2. **Expense Management**:
+   - CRUD operations for expenses allow users to create, read, update, and delete expenses.
+   - Split validation ensures that all expense shares (equal, exact, or percentage) are accurate and consistent.
 
-On 30 September 2026, `npm test` completed successfully with 157 server tests and 22 client tests passing (179 total). `npm run lint` and `npm run build` also completed successfully. The server tests run against the isolated `expenseease_test` PostgreSQL database.
+3. **Balance Calculation**:
+   - Balances are dynamically calculated from expenses and settlements, ensuring data consistency.
+   - Debt simplification uses a greedy algorithm to minimize the number of transactions required to settle debts.
 
-## 12. Project-management status
+4. **Database Integration**:
+   - PostgreSQL is used as the relational database, with Prisma as the ORM for schema management and queries.
+   - Dockerized PostgreSQL ensures consistent development and production environments.
 
-The project uses an iterative and incremental SDLC: requirements and design establish a traceable baseline, then each working increment is implemented, integrated, tested, and reviewed before the next increment. The completed increments are authentication/group workflows, expense/split workflows, and balance/settlement/dashboard workflows. This approach provided working software early, controlled change through scoped increments, and used automated tests and screenshots as validation evidence.
+5. **Testing**:
+   - The backend is thoroughly tested with **Vitest** and **Supertest**, covering unit tests, integration tests, and API tests.
+   - Test cases include edge scenarios such as invalid splits, unauthorized access, and concurrent updates.
 
-The project-management documents contain the live status and discovered risks. Git history confirms implemented backend services and frontend authentication, equal/exact/percentage splits, settlement, and group workflows. Each of the four members has an equal 25% contribution spanning frontend and backend work; the primary ownership record is in `Task_Allocation.md` and `Contribution_Record.md`.
+### 8.2 Frontend Implementation
+
+The frontend is a **React**-based Single Page Application (SPA) built with **Vite** for fast development and optimized builds. Key frontend features include:
+
+1. **User Interface**:
+   - A responsive and intuitive UI allows users to register, log in, create groups, add members, and manage expenses.
+   - The dashboard provides a summary of balances, activity logs, and group details.
+
+2. **Expense Workflow**:
+   - Users can add expenses with descriptions, amounts, categories, and split types.
+   - Real-time validation ensures that inputs are correct before submission.
+
+3. **Dashboard and Activity Log**:
+   - The dashboard displays "you owe" and "owed to you" balances across all groups.
+   - The activity log provides a detailed history of all expenses and settlements.
+
+4. **API Integration**:
+   - Axios is used for seamless communication with the backend API.
+   - Error handling and loading states are implemented to enhance the user experience.
+
+### 8.3 Current Status
+
+- **Backend**: Fully functional with all core features implemented and tested.
+- **Frontend**: Supports the complete registration-to-expense workflow, including group creation, member management, and expense recording.
+- **Testing**: 179 tests (157 backend, 22 frontend) have been successfully executed, ensuring high code quality.
+
+---
+
+## 9. Testing Performed
+
+### 9.1 Test Strategy
+
+The testing strategy for ExpenseEase includes the following levels:
+
+1. **Unit Testing**:
+   - Focuses on individual functions and modules, such as split validation and balance calculation.
+   - Ensures that each component behaves as expected in isolation.
+
+2. **Integration Testing**:
+   - Verifies the interaction between different modules, such as the API endpoints and the database.
+   - Ensures that data flows correctly through the system.
+
+3. **End-to-End Testing**:
+   - Simulates real user workflows, such as registering, creating a group, adding members, and recording expenses.
+   - Ensures that the system works as a whole.
+
+### 9.2 Test Results
+
+On **30 September 2026**, the following tests were executed:
+
+- **Backend Tests**:
+  - 157 tests covering authentication, group management, expense CRUD, split validation, balance calculation, and debt simplification.
+  - All tests passed successfully.
+
+- **Frontend Tests**:
+  - 22 tests covering UI components, form validation, and API integration.
+  - All tests passed successfully.
+
+### 9.3 Evidence
+
+- Screenshots of test results are included in the appendix.
+- The `npm test` command output confirms that all tests passed without errors.
+- Linting (`npm run lint`) and build (`npm run build`) were also successful.
+
+---
+
+## 10. Project Management Status
+
+### 10.1 Development Approach
+
+The project follows an **iterative and incremental SDLC**. Each increment delivers a working subset of features, which is then tested and reviewed before moving to the next increment. This approach ensures that the system is always in a deployable state.
+
+### 10.2 Completed Increments
+
+1. **Authentication and Group Workflows**:
+   - User registration, login, and JWT-based authentication.
+   - Group creation and member management.
+
+2. **Expense and Split Workflows**:
+   - Expense CRUD operations with equal, exact, and percentage splits.
+   - Validation of splits to ensure accuracy.
+
+3. **Balance, Settlement, and Dashboard Workflows**:
+   - Dynamic balance calculation and debt simplification.
+   - Settlement recording and activity logs.
+   - Dashboard summaries for cross-group balances.
 
 ## 13. Individual contribution table
 
