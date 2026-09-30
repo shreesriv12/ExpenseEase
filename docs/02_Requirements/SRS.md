@@ -17,7 +17,7 @@ ExpenseEase records shared group expenses, calculates balances, and proposes sim
 
 ## Non-functional requirements
 
-Passwords use bcrypt with cost 10 or greater. Money is stored as integer paise and balance sums must equal zero. Inputs are validated before persistence. The local SQLite implementation targets balance calculation for 1,000 expenses in under 500 ms.
+Passwords use bcrypt with cost 10 or greater. Money is stored as integer paise and balance sums must equal zero. Inputs are validated before persistence. PostgreSQL runs in Docker for reproducible development and deployment.
 
 ## Traceability
 

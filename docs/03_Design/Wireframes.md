@@ -9,7 +9,7 @@
 +---------------------------+
 
 +---------------------------+
-| Goa Weekend               |
+| Weekend Trip               |
 | Expenses | Balances | Feed|
 | Add equal-split expense   |
 | Description [ ] Amount [ ]|
@@ -17,4 +17,4 @@
 +---------------------------+
 ```
 
-Login is keyboard-accessible and fields have labels. Group detail uses tabs for expenses, balances, and activity; the current frontend provides the equal split workflow. Exact/percent UI and settle-up modal remain planned.
+Login is keyboard-accessible and fields have labels. Group detail uses tabs for expenses, balances, and activity; the frontend supports equal, exact, and percentage splits and settlement recording.

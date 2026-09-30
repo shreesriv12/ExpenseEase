@@ -7,7 +7,7 @@ sequenceDiagram
  participant U as Member
  participant A as API
  participant S as Expense service
- participant D as SQLite
+ participant D as PostgreSQL
  U->>A: POST expense
  A->>S: validate and calculate splits
  S->>D: store expense, splits, activity

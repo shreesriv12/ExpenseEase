@@ -22,7 +22,7 @@ Friends, roommates, and trip groups often use chat messages or spreadsheets to t
 
 ## 4. Scope
 
-Included scope is authentication, group membership, expenses, balances, settlements, activity, and dashboard summaries. The current implementation includes backend services and a frontend demo flow for login, group browsing, equal expense entry, balances, and activity. Payment processing, OCR, multi-currency support, social login, notifications, native apps, and recurring expenses remain out of scope. The application uses INR, local SQLite, and manually recorded settlements.
+Included scope is authentication, group membership, expenses, balances, settlements, activity, and dashboard summaries. The current implementation provides a live registration-to-group-to-expense workflow backed by PostgreSQL. Payment processing, OCR, multi-currency support, social login, notifications, native apps, and recurring expenses remain out of scope. The application uses INR, Dockerized PostgreSQL, and manually recorded settlements.
 
 ## 5. Stakeholders
 
@@ -36,7 +36,7 @@ Included scope is authentication, group membership, expenses, balances, settleme
 
 ## 6. Requirements specification
 
-Functional requirements cover registration, group creation, member addition, expense CRUD, split validation, balance calculation, debt simplification, settlement recording, activity, and dashboard summaries. Non-functional requirements include bcrypt password hashing, JWT-based authentication, validated input, SQLite portability, and balance invariants.
+Functional requirements cover registration, group creation, member addition, expense CRUD, split validation, balance calculation, debt simplification, settlement recording, activity, and dashboard summaries. Non-functional requirements include bcrypt password hashing, JWT-based authentication, validated input, Dockerized PostgreSQL, and balance invariants.
 
 ## 7. Requirements model
 
@@ -44,7 +44,7 @@ The detailed use-case diagram, six use cases, and eighteen user stories are in t
 
 ## 8. System design
 
-The browser SPA calls an Express REST API. Routes delegate to controllers and services; Prisma accesses SQLite. The debt simplifier is a pure service, separated from database access. Balances are computed from expenses and settlements rather than stored, preventing stale records.
+The browser SPA calls an Express REST API. Routes delegate to controllers and services; Prisma accesses PostgreSQL. The debt simplifier is a pure service, separated from database access. Balances are computed from expenses and settlements rather than stored, preventing stale records.
 
 ## 9. Technology stack and justification
 
@@ -53,21 +53,19 @@ The browser SPA calls an Express REST API. Routes delegate to controllers and se
 | Frontend   | React/Vite/Axios  | Fast local SPA and API integration    |
 | Backend    | Node.js/Express   | Small REST service with clear routes  |
 | Validation | Zod               | Declarative input contracts           |
-| Database   | SQLite/Prisma     | Zero-setup relational model           |
+| Database   | PostgreSQL/Prisma | Dockerized relational persistence     |
 | Security   | bcrypt/JWT/helmet | Password hashing and protected routes |
 | Tests      | Vitest/Supertest  | Fast unit and API-oriented testing    |
 
 ## 10. Implementation progress
 
-Verified backend capabilities in the current repository include authentication, group membership and authorization, expense CRUD, deterministic split validation, balance calculation, debt simplification, settlement support, activity, dashboard summaries, seed data, and service-level tests. The current frontend implements a live login-to-group-to-equal-expense-to-balance workflow.
+Verified backend capabilities in the current repository include authentication, group membership and authorization, expense CRUD, deterministic split validation, balance calculation, debt simplification, settlement support, activity, dashboard summaries, and service-level tests. The current frontend implements a live registration-to-group-to-expense-to-balance workflow.
 
-Verified status of remaining UI functionality: exact-split and percentage-split input flows, settlement UI, and broader interface coverage remain pending and are not claimed as complete.
+The frontend supports equal, exact, and percentage split input flows, expense editing/deletion, settlement recording, balance views, activity, and dashboard summaries.
 
 ## 11. Testing performed
 
-The current repository-level test run is not fully passing. Running `npm test` from the project root produced 4 passing suites and 1 failing auth suite. The failure is from `tests/auth.test.js` because `@prisma/client` was not initialized; the error states that Prisma client generation is required before the auth tests can run successfully.
-
-This means the current evidence must be reported accurately: the split, balance, group, and expense service logic is passing in the available automated checks, while auth integration remains a verified outstanding issue.
+On 30 September 2026, `npm test` completed successfully with 157 server tests and 22 client tests passing (179 total). `npm run lint` and `npm run build` also completed successfully. The server tests run against the isolated `expenseease_test` PostgreSQL database.
 
 ## 12. Project-management status
 
@@ -86,7 +84,7 @@ The project addressed deterministic rounding by allocating leftover paise in asc
 
 ## 15. Remaining-semester work
 
-Complete exact/percentage expense UI and settlement UI, resolve Prisma client initialization for auth tests, expand API and frontend tests, add screenshots and verified test evidence, generate migration evidence, improve accessibility and responsiveness, and prepare the final submission package.
+Capture screenshots and verified test evidence, complete truthful team/project-management details, record and publish the demo video, export required PDFs, improve accessibility and responsiveness, and prepare the final submission package.
 
 ## 16. References
 

@@ -2,7 +2,17 @@
 
 ExpenseEase is a local web app for recording shared expenses and calculating deterministic balances. The current app supports registration and login, group creation and membership, equal/exact/percentage split expenses, expense editing and deletion, balance views, settlement recording, activity tracking, and a cross-group dashboard summary.
 
-## Requirements
+## Run with Docker (recommended)
+
+Install Docker Desktop, then run this from the repository root:
+
+```bash
+docker compose up --build
+```
+
+Open `http://localhost:3001`. This starts the React application and Express API in one container and PostgreSQL 16 in a separate persistent container. Prisma migrations run automatically before the API starts. Stop it with `docker compose down`; add `-v` only when you intentionally want to delete the PostgreSQL data volume.
+
+## Requirements for local development
 
 - Node.js 20 or newer
 - npm 10 or newer
@@ -18,15 +28,14 @@ npm run setup
 npm run dev
 ```
 
-`npm run setup` creates the SQLite schema and loads the demo data. The API serves on `http://localhost:3001` and the web app on `http://localhost:5173`.
+Start PostgreSQL first with `docker compose up db -d`, then run `npm run setup`. The API serves on `http://localhost:3001` and the web app on `http://localhost:5173`.
 
-The demo accounts are `asha@demo.local` through `dev@demo.local`, each using the seed password `Demo@1234`.
+The app starts with no accounts or expenses. Create an account from the registration screen, then create a group and add registered members by email.
 
-To create the schema and seed data separately:
+To create the schema manually:
 
 ```bash
 npm run db:migrate -w server
-npm run seed
 ```
 
 ## Quality checks
@@ -39,7 +48,13 @@ npm run lint
 npm run build
 ```
 
-`npm test` runs the server suite against an isolated SQLite database (`server/prisma/test.db`, recreated on every run) and then the client suite. Server test files run sequentially so they share one database without interfering with each other.
+`npm test` runs the server suite against the isolated `expenseease_test` PostgreSQL database and then the client suite. Start Docker first and use `TEST_DATABASE_URL` to override its connection string if needed. The test setup resets only that test database; never point `TEST_DATABASE_URL` at a database containing data you want to keep.
+
+For a database volume that was created before this test database was added, create it once:
+
+```bash
+docker compose exec db psql -U expenseease -d postgres -c "CREATE DATABASE expenseease_test;"
+```
 
 ## Design notes
 
