@@ -13,4 +13,4 @@
 | R9  | Unclear contributions | Medium     | High   | Confirmed contribution log               | Team         |
 | R10 | Demo failure          | Medium     | High   | Fresh seed and checklist                 | Team         |
 
-Current status: the most immediate evidence-based risk is the Prisma client initialization issue affecting authentication testing. This risk is recorded as active until the root `npm test` command passes after the required Prisma generation step is performed.
+Current status: the previous Prisma client initialization issue is resolved: the root `npm test` command passed with 179 tests on 30 September 2026. Current active risks are incomplete submission evidence, missing team-confirmed records, and an inaccessible or missing demo-video link.
