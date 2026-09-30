@@ -1,7 +1,7 @@
 # ExpenseEase — Mid-Semester Project Report
 
 **Course:** Software Engineering & Project Management (CSN15101)  
-**Section:** [Your Section]  
+**Section:** E
 **Group Number:** [Your Group Number]  
 **Instructor:** Dr. Satarupa Chakrabarti  
 **Submission Date:** September 2026
@@ -9,13 +9,12 @@
 ---
 
 ## Team Members
-
-| Name | Registration Number | Role |
-|---|---|---|
-| Shreeya Srivastava | 20243267 | Team Lead / Full-stack |
-| Shraddha Sharma | 20243266 | Backend / Testing |
-| Rudransh Pratap Singh | 20243243 | Frontend / UI |
-| Sachit Jain | 20243245 | Database / DevOps |
+| Name | Registration Number |
+|---|---|
+| Shreeya Srivastava | 20243267 |
+| Shraddha Sharma | 20243266 | 
+| Rudransh Pratap Singh | 20243243 |
+| Sachit Jain | 20243245 |
 
 ---
 
