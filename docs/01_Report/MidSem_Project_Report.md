@@ -29,17 +29,73 @@ This project addresses this problem directly. ExpenseEase is a web-based expense
 
 The motivation for building this system came from a real pain point experienced by the team itself during inter-college events and shared accommodation. The project is also an opportunity to put software engineering principles into practice in a meaningful, self-contained domain.
 
-## 3. Project objectives
+---
 
-1. Record expenses with equal, exact, and percentage split rules.
-2. Preserve monetary accuracy using integer paise.
-3. Compute net balances and simplified debt transfers.
-4. Protect group data with authentication and authorization.
-5. Maintain an explainable, testable codebase.
+## 2. Project Objectives
 
-## 4. Scope
+The primary goal of ExpenseEase is to provide a group with a single, honest ledger for shared expenses. Specifically, the system is designed to:
 
-Included scope is authentication, group membership, expenses, balances, settlements, activity, and dashboard summaries. The current implementation provides a live registration-to-group-to-expense workflow backed by PostgreSQL. Payment processing, OCR, multi-currency support, social login, notifications, native apps, and recurring expenses remain out of scope. The application uses INR, Dockerized PostgreSQL, and manually recorded settlements.
+1. **Eliminate manual calculation errors** — all split arithmetic is performed server-side and validated by automated tests.
+2. **Support multiple split strategies** — equal division, exact amounts, and percentage-based splits cover the most common real-world scenarios.
+3. **Produce verifiable balances** — the balance formula is documented and the invariant (all balances in a group sum to zero) is enforced in code.
+4. **Minimise settlement transactions** — a greedy debt-simplification algorithm reduces the number of transfers needed to clear all debts.
+5. **Maintain a full audit trail** — every expense and settlement is logged so members can trace how the current balance was reached.
+6. **Be accessible without installation** — the application runs in any modern browser; no mobile app is required.
+7. **Protect member data** — passwords are hashed with bcrypt, every API endpoint requires a valid JWT, and group data is scoped to members only.
+
+---
+
+## 3. Scope of the Project
+
+### 3.1 Features Included
+
+| Feature | Description |
+|---|---|
+| User registration and login | Email + password authentication with JWT session tokens (7-day expiry) |
+| Group creation | Any authenticated user can create a group and becomes its administrator |
+| Member management | Group admin can add registered users by email address |
+| Expense recording | Members record expenses with description, amount, category, date, payer, and split type |
+| Equal split | Amount divided equally; remainder paise distributed deterministically by user ID |
+| Exact split | Each participant's share entered manually; validated to sum to total |
+| Percentage split | Each participant's percentage entered; validated to total 100; shares computed server-side |
+| Balance calculation | Net balance per member computed as total paid minus total owed, adjusted for settlements |
+| Debt simplification | Greedy algorithm reduces the number of cash transfers needed to clear all debts |
+| Settlement recording | Any member can record a payment between two group members |
+| Activity log | Every expense and settlement action is timestamped and logged per group |
+| Cross-group dashboard | Logged-in user sees total "you owe" and "owed to you" across all groups |
+| Expense editing | Expense creator or group admin can edit any field, including split details |
+| Expense deletion | Expense creator or group admin can delete an expense |
+
+### 3.2 Features Excluded
+
+The following were considered but deliberately excluded from the mid-semester deliverable:
+
+- **Password reset** — no email delivery mechanism is in scope; a placeholder message is shown.
+- **Notifications** — no email or push notification system.
+- **File/receipt attachments** — expenses are text-only.
+- **Currency support beyond INR** — all amounts are stored in paise (Indian Rupees only).
+- **Recurring expenses** — no auto-repeat functionality.
+- **Expense categories as a dropdown** — category is a free-text field; no enforcement of a fixed taxonomy.
+- **Group deletion or archiving** — groups persist indefinitely.
+- **Mobile application** — the system is web-only; no native Android or iOS app.
+- **Offline mode** — no service worker or local-first data strategy.
+
+### 3.3 Assumptions and Constraints
+
+**Assumptions:**
+- All group members must be registered users before they can be added to a group; adding by name alone is not supported.
+- All monetary amounts are in Indian Rupees. Amounts are entered in rupees (e.g., ₹ 150.00) and stored as integers in paise (15000) to avoid floating-point rounding.
+- Percentage splits accept whole-number percentages only (e.g., 33% is valid; 33.3% is not).
+- The group administrator who creates the group is the only user who can add new members.
+- Settlements do not automatically close or archive; balances accumulate across all expenses and settlements.
+
+**Constraints:**
+- The system requires Node.js 20+ and a PostgreSQL 16 database.
+- The Docker Compose deployment is the supported production setup; local development requires manual environment variable configuration.
+- There is a rate limit of 20 login or registration attempts per minute per IP to prevent brute-force attacks.
+- JWT tokens expire after 7 days; there is no token refresh mechanism in the current version.
+
+---
 
 ## 5. Stakeholders
 
