@@ -1,6 +1,39 @@
 # ExpenseEase
 
-ExpenseEase is a local web app for recording shared expenses and calculating deterministic balances. The current app supports registration and login, group creation and membership, equal/exact/percentage split expenses, expense editing and deletion, balance views, settlement recording, activity tracking, and a cross-group dashboard summary.
+ExpenseEase is a full-stack web application for recording shared expenses and calculating deterministic group balances. It was developed for **Software Engineering & Project Management (CSN15101)**.
+
+## Team
+
+| Member | Registration number |
+| --- | --- |
+| Shreeya Srivastava | 20243267 |
+| Shraddha Sharma | 20243266 |
+| Rudransh Pratap Singh | 20243243 |
+| Sachit Jain | 20243245 |
+
+**Instructor:** Dr. Satarupa Chakrabarti
+
+## Features
+
+- Account registration and JWT-protected login
+- Group creation and membership management
+- Expense creation, editing, and deletion
+- Equal, exact, and percentage expense splits
+- Deterministic balance calculation and debt simplification
+- Settlement recording and activity history
+- Cross-group dashboard summaries
+- Dockerized Express, React, Prisma, and PostgreSQL setup
+
+## Technology stack
+
+| Layer | Technology |
+| --- | --- |
+| Frontend | React, Vite, Axios |
+| Backend | Node.js, Express, Zod |
+| Database | PostgreSQL 16, Prisma ORM |
+| Security | bcrypt, JWT, Helmet |
+| Testing | Vitest, Supertest |
+| Deployment | Docker Compose |
 
 ## Run with Docker (recommended)
 
@@ -11,6 +44,8 @@ docker compose up --build
 ```
 
 Open `http://localhost:3001`. This starts the React application and Express API in one container and PostgreSQL 16 in a separate persistent container. Prisma migrations run automatically before the API starts. Stop it with `docker compose down`; add `-v` only when you intentionally want to delete the PostgreSQL data volume.
+
+The application intentionally starts with no demo accounts or expenses. Register users, create a group, and add registered members by email.
 
 ## Requirements for local development
 
@@ -56,9 +91,27 @@ For a database volume that was created before this test database was added, crea
 docker compose exec db psql -U expenseease -d postgres -c "CREATE DATABASE expenseease_test;"
 ```
 
+Latest verified result: **179 automated tests passed** (157 server tests and 22 client tests), along with lint and production-build checks.
+
 ## Design notes
 
 - Money is stored as integer paise. Rounding happens only in the split calculation services, and each split type is covered by tests that prove the shares sum to the stored amount.
 - Percentage splits accept whole numbers only and must total exactly 100.
 - Passwords are hashed with bcrypt. Every protected route requires a valid JWT, and group data is scoped to the caller's membership.
 - The API returns `{ "error": { "code", "message" } }` for failures. Validation problems use 4xx codes; unexpected failures return a generic 500 so internals are not leaked to clients.
+
+## Project materials
+
+The mid-semester submission material is organized in `submission/`:
+
+```text
+01_Report/                 Project report and AI-use disclosure
+02_Requirements/           SRS and user stories
+03_Design/                 Architecture, database, UML, and wireframes
+04_Source_Code/            Clean source-code snapshot and sample configuration
+05_Testing/                Test cases and UI/test evidence
+06_Project_Management/     Plan, contribution record, meetings, risks, and Git history
+07_Demo/                   Demo-video link file
+```
+
+Before final submission, replace the group-number/section placeholders and add a verified view-only demo-video URL.
