@@ -1,6 +1,5 @@
 # ExpenseEase
 
-<<<<<<< HEAD
 ExpenseEase is a full-stack web application for recording shared expenses and calculating deterministic group balances. It was developed for **Software Engineering & Project Management (CSN15101)**.
 
 ## Team
@@ -245,7 +244,6 @@ For each member in a group:
 net_balance = total_paid − total_owed ± settlements
 ```
 
-<<<<<<< HEAD
 Latest verified result: **179 automated tests passed** (157 server tests and 22 client tests), along with lint and production-build checks.
 
 ## Design notes
@@ -367,4 +365,3 @@ Activities were sequenced with dependencies and durations estimated with three-p
 ## 10. Academic Integrity
 
 AI tool usage is declared in `AI_USAGE_DISCLOSURE.md`.
->>>>>>> 42ad060ac1c9f5ad68516750a7c2d20c93cbab62
