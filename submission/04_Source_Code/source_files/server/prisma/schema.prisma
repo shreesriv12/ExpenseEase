@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+enum Role {
+ ADMIN
+ MEMBER
+}
+enum SplitType {
+ EQUAL
+ EXACT
+ PERCENT
+}
+model User {
+ id Int @id @default(autoincrement())
+ name String
+ email String @unique
+ passwordHash String
+ createdAt DateTime @default(now())
+ memberships GroupMember[]
+ paidExpenses Expense[] @relation("PaidExpenses")
+ createdExpenses Expense[] @relation("CreatedExpenses")
+ createdGroups Group[] @relation("CreatedGroups")
+ splits ExpenseSplit[]
+}
+model Group {
+ id Int @id @default(autoincrement())
+ name String
+ description String?
+ createdById Int
+ createdBy User @relation("CreatedGroups", fields: [createdById], references: [id])
+ createdAt DateTime @default(now())
+ members GroupMember[]
+ expenses Expense[]
+ settlements Settlement[]
+ activities Activity[]
+}
+model GroupMember {
+ id Int @id @default(autoincrement())
+ groupId Int
+ userId Int
+ role Role @default(MEMBER)
+ joinedAt DateTime @default(now())
+ group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+ user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+ @@unique([groupId, userId])
+}
+model Expense {
+ id Int @id @default(autoincrement())
+ groupId Int
+ description String
+ amountPaise Int
+ category String
+ date DateTime
+ paidById Int
+ createdById Int
+ splitType SplitType
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+ paidBy User @relation("PaidExpenses", fields: [paidById], references: [id])
+ createdBy User @relation("CreatedExpenses", fields: [createdById], references: [id])
+ splits ExpenseSplit[]
+}
+model ExpenseSplit {
+ id Int @id @default(autoincrement())
+ expenseId Int
+ userId Int
+ sharePaise Int
+ percent Int?
+ expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+ user User @relation(fields: [userId], references: [id])
+}
+model Settlement {
+ id Int @id @default(autoincrement())
+ groupId Int
+ fromUserId Int
+ toUserId Int
+ amountPaise Int
+ note String?
+ createdAt DateTime @default(now())
+ group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+}
+model Activity {
+ id Int @id @default(autoincrement())
+ groupId Int
+ actorId Int
+ type String
+ message String
+ createdAt DateTime @default(now())
+ group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+}
