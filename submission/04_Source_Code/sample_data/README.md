@@ -1,5 +1,5 @@
-# Sample configuration and data
+# Sample Input and Test Data
 
-Copy `.env.example` to `server/.env` for local development, then set an appropriate local `DATABASE_URL` and `JWT_SECRET`.
+Copy `.env.example` to `source_files/server/.env`, then configure a local database and JWT secret. Run `npm run seed` from `source_files/` after migrations to load fictional demo users, the Goa Weekend Demo group, equal/exact/percentage expenses, and a settlement. All demo accounts use the development-only password `DemoPass123!`.
 
-ExpenseEase deliberately starts with no seeded users, groups, or expenses. Create accounts and sample expenses through the registration and application screens. Automated tests create and reset their own isolated PostgreSQL test data.
+`demo-inputs.json` provides manual API-test payloads and expected split values. Monetary amounts are in paise. Do not use this password or data in production.

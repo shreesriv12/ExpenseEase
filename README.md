@@ -83,7 +83,7 @@ ExpenseEase/
 
 ---
 
-The application intentionally starts with no demo accounts or expenses. Register users, create a group, and add registered members by email.
+For a quick working demonstration, `npm run seed` creates local-only sample accounts, a group, expenses using all three split types, and a settlement. See [`sample_data/README.md`](sample_data/README.md) for the accounts, sample inputs, and expected results.
 
 ## Requirements for local development
 ## 4. Getting Started

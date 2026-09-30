@@ -1,0 +1,8 @@
+{
+  "currency": "INR",
+  "moneyUnit": "paise",
+  "equalSplit": { "amountPaise": 10000, "participantCount": 3, "expectedSharesPaise": [3334, 3333, 3333] },
+  "exactSplit": { "amountPaise": 185000, "sharesPaise": [60000, 50000, 75000] },
+  "percentSplit": { "amountPaise": 100000, "percents": [50, 30, 20], "expectedSharesPaise": [50000, 30000, 20000] },
+  "negativeCases": ["Exact shares that do not total the expense amount", "Percentages that do not total 100"]
+}

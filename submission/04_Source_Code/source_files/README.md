@@ -30,7 +30,7 @@ npm run dev
 
 Start PostgreSQL first with `docker compose up db -d`, then run `npm run setup`. The API serves on `http://localhost:3001` and the web app on `http://localhost:5173`.
 
-The app starts with no accounts or expenses. Create an account from the registration screen, then create a group and add registered members by email.
+For a ready-to-use local demonstration, run `npm run seed`. It creates fictional local-only accounts, a demo group, three expense split types, and a settlement. Account details, sample API inputs, and expected results are in [`../sample_data/README.md`](../sample_data/README.md).
 
 To create the schema manually:
 

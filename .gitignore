@@ -4,5 +4,4 @@ dist/
 coverage/
 *.db
 *.db-journal
-submission/
 .env.*

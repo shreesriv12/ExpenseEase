@@ -1,0 +1,73 @@
+{
+  "notes": {
+    "currency": "INR",
+    "moneyUnit": "paise",
+    "replacePlaceholderIds": true
+  },
+  "createGroup": {
+    "name": "Goa Weekend",
+    "description": "Manual-test group for shared trip expenses"
+  },
+  "addMember": {
+    "email": "diya.demo@expenseease.local"
+  },
+  "expenseRequests": [
+    {
+      "case": "Equal split with deterministic remainder",
+      "request": {
+        "description": "Airport cab",
+        "amountPaise": 10000,
+        "category": "Travel",
+        "date": "2026-09-25T10:00:00.000Z",
+        "paidById": "<aaravUserId>",
+        "splitType": "EQUAL",
+        "participants": [
+          { "userId": "<aaravUserId>" },
+          { "userId": "<diyaUserId>" },
+          { "userId": "<kabirUserId>" }
+        ]
+      },
+      "expectedSharesPaise": [3334, 3333, 3333]
+    },
+    {
+      "case": "Exact split",
+      "request": {
+        "description": "Dinner",
+        "amountPaise": 185000,
+        "category": "Food",
+        "date": "2026-09-25T14:00:00.000Z",
+        "paidById": "<diyaUserId>",
+        "splitType": "EXACT",
+        "participants": [
+          { "userId": "<aaravUserId>", "sharePaise": 60000 },
+          { "userId": "<diyaUserId>", "sharePaise": 50000 },
+          { "userId": "<kabirUserId>", "sharePaise": 75000 }
+        ]
+      },
+      "expectedSharesPaise": [60000, 50000, 75000]
+    },
+    {
+      "case": "Percentage split",
+      "request": {
+        "description": "Water sports",
+        "amountPaise": 100000,
+        "category": "Activities",
+        "date": "2026-09-25T16:00:00.000Z",
+        "paidById": "<kabirUserId>",
+        "splitType": "PERCENT",
+        "participants": [
+          { "userId": "<aaravUserId>", "percent": 50 },
+          { "userId": "<diyaUserId>", "percent": 30 },
+          { "userId": "<kabirUserId>", "percent": 20 }
+        ]
+      },
+      "expectedSharesPaise": [50000, 30000, 20000]
+    }
+  ],
+  "settlementRequest": {
+    "fromUserId": "<diyaUserId>",
+    "toUserId": "<aaravUserId>",
+    "amountPaise": 10000,
+    "note": "Partial settlement for the hotel"
+  }
+}
