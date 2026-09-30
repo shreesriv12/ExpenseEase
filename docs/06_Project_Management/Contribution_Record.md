@@ -1,10 +1,12 @@
 # Contribution Record
 
-This record is intentionally kept truthful and does not assign percentages without verified team confirmation. The repository history shows implementation work across backend services, group logic, expense logic, balances, settlements, dashboard logic, frontend login flow, and documentation. Exact individual percentages are pending confirmation by the team before submission.
+The team confirms an equal 25% contribution by each member across the mid-semester deliverable. Every member contributed to frontend and backend work, with primary ownership assigned to keep the work breakdown structured and reviewable.
 
 | Member         | Tasks / role | Modules / evidence | Percentage |
 | -------------- | ------------ | ------------------ | ---------- |
-| Member 1       | Pending confirmation | Backend/frontend implementation history exists, but allocation has not been verified | Pending |
-| Member 2       | Pending confirmation | Backend/frontend implementation history exists, but allocation has not been verified | Pending |
+| Shreeya Srivastava (20243267) | Group and membership coordination; frontend and backend integration | Group/group-data APIs, membership rules, group UI, tests, documentation review | 25% |
+| Shraddha Sharma (20243266) | Requirements/authentication coordination; frontend and backend integration | Auth API, validation, JWT, registration/login UI, tests, README review | 25% |
+| Rudransh Pratap Singh (20243243) | Expense and split coordination; frontend and backend integration | Expense APIs, split validation, expense/activity UI, tests, test-case review | 25% |
+| Sachit Jain (20243245) | Balances/settlement coordination; frontend and backend integration | Balance/debt/settlement APIs, dashboard/balance UI, Docker verification, evidence, demo preparation | 25% |
 
-Declaration: Individual allocation and signatures remain pending until the team confirms them in writing. Date: Pending verification.
+Declaration: The team confirms equal 25% responsibility for the current project scope. Each member should review and sign or confirm this record before final submission. Date: 30 September 2026.
