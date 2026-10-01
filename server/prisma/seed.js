@@ -96,7 +96,15 @@ async function main() {
         },
       },
       activities: {
-        create: { actorId: aarav.id, type: "DEMO_DATA_CREATED", message: "Created sample demo data" },
+        create: [
+          { actorId: aarav.id, type: "GROUP_CREATED", message: "Aarav Mehta created the group Goa Weekend Demo" },
+          { actorId: aarav.id, type: "MEMBER_ADDED", message: "Aarav Mehta added Diya Nair to the group" },
+          { actorId: aarav.id, type: "MEMBER_ADDED", message: "Aarav Mehta added Kabir Shah to the group" },
+          { actorId: aarav.id, type: "EXPENSE_CREATED", message: "Aarav Mehta added an expense: Hotel booking for ₹1,200.00" },
+          { actorId: diya.id, type: "EXPENSE_CREATED", message: "Diya Nair added an expense: Dinner at the beach for ₹1,850.00" },
+          { actorId: kabir.id, type: "EXPENSE_CREATED", message: "Kabir Shah added an expense: Water sports for ₹1,000.00" },
+          { actorId: diya.id, type: "SETTLEMENT_RECORDED", message: "Diya Nair recorded a payment of ₹100.00 to Aarav Mehta" },
+        ],
       },
     },
   });
